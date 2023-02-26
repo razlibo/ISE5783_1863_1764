@@ -1,9 +1,19 @@
 package primitives;
 
+/** This class will present Ray object
+ * @author Raz*/
 public class Ray {
-
+    /**Vector in the space*/
     private Vector dir;
+
+    /** Point stating point*/
     private Point p0;
+
+    /**
+     * constructor for Ray
+     * @param v Vector value
+     * @param p point value
+     */
     public Ray(Vector v, Point p){
         this.dir = v.normalize();
         this.p0 = p;
