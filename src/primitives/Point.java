@@ -9,7 +9,7 @@ public class Point {
         this.xyz = xyz;
     }
 
-    public Point(Double x, Double y, Double z){
+    public Point(double x, double y, double z){
         this.xyz = new Double3(x, y, z);
     }
 
