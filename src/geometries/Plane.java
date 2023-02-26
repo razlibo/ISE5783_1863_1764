@@ -3,15 +3,29 @@ package geometries;
 import primitives.Point;
 import primitives.Vector;
 
-public class Plane implements Geometry{
+/**
+ * class that represent a plane
+ *
+ * @author Yoni
+ */
+public class Plane implements Geometry {
     private final Point p0;
     private final Vector normal;
 
-    public Plane(Point p1,Point p2,Point p3){
+    /**
+     * constructor that take 3 points and calculate the plane
+     */
+    public Plane(Point p1, Point p2, Point p3) {
         p0 = p1;
         normal = null;
     }
 
+    /**
+     * constructor that take existing plane by -
+     *
+     * @param p0     the point in the plane
+     * @param normal the normal vector to the plane
+     */
     public Plane(Point p0, Vector normal) {
         this.p0 = p0;
         this.normal = normal;
@@ -22,11 +36,19 @@ public class Plane implements Geometry{
         return null;
     }
 
+    /**
+     * getter for p0
+     */
     public Point getP0() {
         return p0;
     }
 
-    public Vector getNormal(){
+    /**
+     * getter for normal
+     *
+     * @return the normal
+     */
+    public Vector getNormal() {
         return normal;
     }
 }

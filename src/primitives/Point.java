@@ -1,8 +1,10 @@
 package primitives;
 
-import test.Main;
-/** This class will serve primitive classes based on three numbers from Double3
- * @author Raz */
+/**
+ * This class will serve primitive classes based on three numbers from Double3
+ *
+ * @author Raz
+ */
 public class Point {
     /**
      * Vector in the space
@@ -11,6 +13,7 @@ public class Point {
 
     /**
      * constructor for point
+     *
      * @param xyz Double3 value
      */
     Point(Double3 xyz) {
@@ -41,33 +44,45 @@ public class Point {
         return this.xyz.toString();
     }
 
-    /** Sum two vectors into a new Point where each couple of numbers
+    /**
+     * Sum two vectors into a new Point where each couple of numbers
      * is summarized
-     * @param  v right handle side operand for addition
-     * @return     result of add */
+     *
+     * @param v right handle side operand for addition
+     * @return result of add
+     */
     public Point add(Vector v) {
         return new Point(this.xyz.add(v.xyz));
     }
 
-    /** Subtract vector from Point into a new vector
-     * @param  p right handle side operand for subtract
-     * @return     result of subtract */
+    /**
+     * Subtract vector from Point into a new vector
+     *
+     * @param p right handle side operand for subtract
+     * @return result of subtract
+     */
     public Vector subtract(Point p) {
         return new Vector(this.xyz.subtract(p.xyz));
     }
 
-    /** distance squared
-     *@param p point to calculate the distance
-     *@return the distance between thh two points */
+    /**
+     * distance squared
+     *
+     * @param p point to calculate the distance
+     * @return the distance between thh two points
+     */
     public double distanceSquared(Point p) {
         return (this.xyz.d1 - p.xyz.d1) * (this.xyz.d1 - p.xyz.d1) +
                 (this.xyz.d2 - p.xyz.d2) * (this.xyz.d2 - p.xyz.d2) +
                 (this.xyz.d3 - p.xyz.d3) * (this.xyz.d3 - p.xyz.d3);
     }
 
-    /** distance sqrt
-     *@param p point to calculate the distance
-     *@return the distance sqrt between thh two points */
+    /**
+     * distance sqrt
+     *
+     * @param p point to calculate the distance
+     * @return the distance sqrt between thh two points
+     */
     public double distance(Point p) {
         return Math.sqrt(distanceSquared(p));
     }

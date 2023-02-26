@@ -4,9 +4,21 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-public class Cylinder extends Tube{
+/**
+ * class that represent Cylinder
+ *
+ * @author Yoni
+ */
+public class Cylinder extends Tube {
     private final double height;
 
+    /**
+     * constructor that take all 3 fields
+     *
+     * @param radius  the radius
+     * @param axisRay the axis ray
+     * @param height  the height
+     */
     public Cylinder(double radius, Ray axisRay, double height) {
         super(radius, axisRay);
         this.height = height;
@@ -17,6 +29,11 @@ public class Cylinder extends Tube{
         return null;
     }
 
+    /**
+     * getter for height
+     *
+     * @return height
+     */
     public double getHeight() {
         return height;
     }
