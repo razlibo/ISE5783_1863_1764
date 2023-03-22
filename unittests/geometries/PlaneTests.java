@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Yoni
  */
 class PlaneTests {
+
     /**
      * Test method for {@link geometries.Plane#getNormal(Point)}
      */

@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Yoni
  */
 class PolygonTests {
+
     /**
      * Test method for {@link geometries.Polygon#getNormal(Point)}
      */
