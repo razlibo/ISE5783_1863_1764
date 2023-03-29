@@ -39,6 +39,10 @@ class PointTests {
      */
     @Test
     void testDistanceSquared() {
+        // ============ Equivalence Partitions Tests ==============
+
+        // TC01: check if the result is currect
+        assertEquals(27,new Point(3,0,0).distanceSquared(new Point(0,3,3)),0.000001,"ERROR: the result of distance squared is incorrect");
     }
 
     /**
@@ -46,5 +50,9 @@ class PointTests {
      */
     @Test
     void testDistance() {
+        // ============ Equivalence Partitions Tests ==============
+
+        // TC01: check if the result is correct
+        assertEquals(Math.sqrt(27),new Point(3,0,0).distance(new Point(0,3,3)),0.000001,"ERROR: the result of distance is incorrect");
     }
 }
