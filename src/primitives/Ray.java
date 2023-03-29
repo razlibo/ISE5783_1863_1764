@@ -9,12 +9,12 @@ public class Ray {
     /**
      * Vector in the space
      */
-    private Vector dir;
+    private final Vector dir;
 
     /**
      * Point stating point
      */
-    private Point p0;
+    private final Point p0;
 
     /**
      * constructor for Ray
@@ -39,5 +39,13 @@ public class Ray {
     @Override
     public String toString() {
         return this.p0.toString() + this.dir.toString();
+    }
+
+    public Vector getDir() {
+        return dir;
+    }
+
+    public Point getP0() {
+        return p0;
     }
 }

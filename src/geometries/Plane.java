@@ -17,7 +17,7 @@ public class Plane implements Geometry {
      */
     public Plane(Point p1, Point p2, Point p3) {
         p0 = p1;
-        normal = null;
+        normal = p1.subtract(p2).crossProduct(p2.subtract(p3)).normalize();
     }
 
     /**
@@ -33,7 +33,7 @@ public class Plane implements Geometry {
 
     @Override
     public Vector getNormal(Point p) {
-        return null;
+        return normal;
     }
 
     /**

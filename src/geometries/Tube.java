@@ -3,6 +3,7 @@ package geometries;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+import static primitives.Util.isZero;
 
 /**
  * class that represent tube
@@ -28,7 +29,12 @@ public class Tube extends RadialGeometry {
 
     @Override
     public Vector getNormal(Point p) {
-        return null;
+        if(isZero(p.subtract(axisRay.getP0()).dotProduct(axisRay.getDir()))){
+            return p.subtract(axisRay.getP0()).normalize();
+        }
+        double t = axisRay.getDir().dotProduct(p.subtract(axisRay.getP0()));
+        Point O = axisRay.getP0().add(axisRay.getDir().Scale(t));
+        return p.subtract(O).normalize();
     }
 
     /**
