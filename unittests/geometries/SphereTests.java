@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Yoni
  */
 class SphereTests {
+
     /**
      * Test method for {@link geometries.Sphere#getNormal(Point)}
      */

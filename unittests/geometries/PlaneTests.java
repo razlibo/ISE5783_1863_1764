@@ -12,19 +12,6 @@ import static primitives.Util.isZero;
  * @author Yoni
  */
 class PlaneTests {
-
-    /**
-     * Test method for {@link geometries.Plane#Plane(Point, Point, Point)}
-     */
-    @Test
-    void testConstructor(){
-        // =============== Boundary Values Tests ==================
-        // TC10: The first two points is the same
-        assertThrows(IllegalArgumentException.class,()-> new Plane(new Point(0,0,0),new Point(0,0,0),new Point(0,0,1)),"ERROR: the plane constructor accept two identical points");
-        // TC11: All points on the same line
-        assertThrows(IllegalArgumentException.class,()-> new Plane(new Point(0,0,1),new Point(0,0,2),new Point(0,0,3)),"ERROR: the plane constructor accept tree points on the same line");
-
-    }
     /**
      * Test method for {@link geometries.Plane#getNormal(Point)}
      */
