@@ -43,6 +43,13 @@ class VectorTests {
      */
     @Test
     void testScale() {
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Test correct scale
+        assertEquals(new Vector(3,3,3), new Vector(1,1,1).Scale(3),"ERROR: Scale doesn't work properly");
+
+        // =============== Boundary Values Tests ==================
+        // TC10: Test scale by 0
+        assertThrows(IllegalArgumentException.class, () -> new Vector(1,1,1).Scale(0), "ERROR: Can scale by 0");
     }
 
     /**

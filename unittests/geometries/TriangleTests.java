@@ -2,6 +2,7 @@ package geometries;
 
 import org.junit.jupiter.api.Test;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,4 +30,46 @@ class TriangleTests {
             assertTrue(isZero(result.dotProduct(pts[i].subtract(pts[i == 0 ? 2 : i - 1]))),
                     "Triangle's normal is not orthogonal to one of the edges");
     }
+
+    /**
+     * Test method for {@link geometries.Triangle#findIntersections(primitives.Ray)}.
+     */
+    @Test
+    public void testFindIntersections() {
+        Triangle triangle = new Triangle(new Point(4,0,0), new Point(0,4,0), new Point(0,-4,0));
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Ray goes inside the triangle
+        var result = triangle.findIntersections(new Ray(new Point(1,-1,-1), new Vector(0,0,1)));
+
+        assertEquals(1, result.size(), "wrong number of points");
+
+        assertEquals(new Point(1,-1,0),result.get(0), "wrong intersection point");
+
+        // TC02: Ray goes outside the triangle against an edge
+
+        assertNull(triangle.findIntersections(new Ray(new Point(-1,0,-1), new Vector(0,0,1))), "wrong number of points");
+
+        // TC02: Ray goes outside the triangle against an edge
+
+        assertNull(triangle.findIntersections(new Ray(new Point(-1,0,-1), new Vector(0,0,1))), "wrong number of points");
+
+        // TC03: Ray goes outside the triangle against a vertex
+
+        assertNull(triangle.findIntersections(new Ray(new Point(-1,6,-1), new Vector(0,0,1))), "wrong number of points");
+
+        // =============== Boundary Values Tests ==================
+        // TC 11: Ray goes on edge
+
+        assertNull(triangle.findIntersections(new Ray(new Point(0,2,-1), new Vector(0,0,1))), "wrong number of points");
+
+        // TC 12: Ray goes on vertex
+
+        assertNull(triangle.findIntersections(new Ray(new Point(4,0,-1), new Vector(0,0,1))), "wrong number of points");
+
+        // TC 11: Ray goes on edge's continuation
+
+        assertNull(triangle.findIntersections(new Ray(new Point(0,6,-1), new Vector(0,0,1))), "wrong number of points");
+
+    }
+
 }

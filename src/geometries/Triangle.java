@@ -1,6 +1,9 @@
 package geometries;
 
 import primitives.Point;
+import primitives.Ray;
+import static primitives.Util.*;
+import java.util.List;
 
 /**
  * class that represent triangle
@@ -17,5 +20,20 @@ public class Triangle extends Polygon {
      */
     public Triangle(Point p1, Point p2, Point p3) {
         super(p1, p2, p3);
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        var v1 = this.vertices.get(0).subtract(ray.getP0());
+        var v2 = this.vertices.get(1).subtract(ray.getP0());
+        var v3 = this.vertices.get(2).subtract(ray.getP0());
+        var n1 = v1.crossProduct(v2).normalize();
+        var n2 = v2.crossProduct(v3).normalize();
+        var n3 = v3.crossProduct(v1).normalize();
+        var v = ray.getDir();
+        if((alignZero(v.dotProduct(n1)) > 0 && alignZero(v.dotProduct(n2)) > 0 && alignZero(v.dotProduct(n3)) > 0) || (alignZero(v.dotProduct(n1)) < 0 && alignZero(v.dotProduct(n2)) < 0 && alignZero(v.dotProduct(n3)) < 0)){
+            return new Plane(this.vertices.get(0), this.vertices.get(1), this.vertices.get(2)).findIntersections(ray);
+        }
+        return null;
     }
 }

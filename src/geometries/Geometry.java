@@ -8,7 +8,7 @@ import primitives.Vector;
  *
  * @author Yoni
  */
-public interface Geometry {
+public interface Geometry extends Intersectable{
     /**
      * @param p the point that we want to get the normal from
      * @return the normal vector

@@ -23,11 +23,19 @@ public class Ray {
      * @param p point value
      */
 
-    public Ray(Vector v, Point p) {
+    public Ray(Point p, Vector v) {
         this.dir = v.normalize();
         this.p0 = p;
     }
 
+    /**
+     * get the point
+     * @param t for scale in dir
+     * @return P0 + dir scale in t
+     */
+    public Point getPoint(double t){
+        return this.p0.add(this.getDir().Scale(t));
+    }
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
