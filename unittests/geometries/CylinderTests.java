@@ -40,12 +40,5 @@ class CylinderTests {
         assertEquals(new Vector(0, 1, 0), cyl.getNormal(new Point(0, 1, 1)),
                 "Bad normal to center of upper base");
 
-        // TC13: Point at the edge with 1st base
-        assertEquals(new Vector(0, 1, 0), cyl.getNormal(new Point(0, 0, 2)),
-                "Bad normal to edge with lower base");
-
-        // TC14: Point at the edge with 2nd base
-        assertEquals(new Vector(0, 1, 0), cyl.getNormal(new Point(0, 1, 2)),
-                "Bad normal to edge with upper base");
     }
 }

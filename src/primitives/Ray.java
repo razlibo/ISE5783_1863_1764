@@ -1,5 +1,9 @@
 package primitives;
 
+import geometries.Intersectable;
+
+import java.util.List;
+
 /**
  * This class will present Ray object
  *
@@ -55,5 +59,27 @@ public class Ray {
 
     public Point getP0() {
         return p0;
+    }
+
+    /**
+     Finds the closest point in a list of points to p0.
+
+     @param points A list of points to search for the closest point.
+
+     @return The closest point in the list to p0.
+     */
+    public Point findClosesPoint(List<Point> points){
+        if (points.isEmpty()) return null;
+        Point min = points.get(0);
+        double minDistance = p0.distance(points.get(0));
+
+        for (Point point : points){
+            double distance = p0.distance(point);
+            if (distance < minDistance){
+                min = point;
+                minDistance = distance;
+            }
+        }
+        return min;
     }
 }

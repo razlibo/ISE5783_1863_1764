@@ -1,10 +1,12 @@
 package renderer;
 
+import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-import static primitives.Util.alignZero;
+import java.util.MissingResourceException;
+
 import static primitives.Util.isZero;
 
 /**
@@ -35,6 +37,59 @@ public class Camera {
 
     /** The distance between the camera and the view plane */
     private double VPDistance;
+
+    ImageWriter imageWriter;
+
+    /** Ray tracer */
+    RayTracerBase rayTracer;
+
+    /**
+     * check if all fields are not empty
+     */
+    public void renderImage(){
+        if(location == null){
+            throw new MissingResourceException("location not given","Camera", "location");
+        }
+
+        if(vTo == null){
+            throw new MissingResourceException("vTo not given","Camera", "vTo");
+        }
+
+        if(vUp == null){
+            throw new MissingResourceException("vUp not given","Camera", "vUp");
+        }
+
+        if(vRight == null){
+            throw new MissingResourceException("vRight not given","Camera", "vRight");
+        }
+
+        if(VPHeight == 0){
+            throw new MissingResourceException("VPHeight not given","Camera", "VPHeight");
+        }
+
+        if(VPDistance == 0){
+            throw new MissingResourceException("VPDistance not given","Camera", "VPDistance");
+        }
+
+        if(VPWidth == 0){
+            throw new MissingResourceException("VPWidth not given","Camera", "VPWidth");
+        }
+
+        if(imageWriter == null){
+            throw new MissingResourceException("Image writer not given","Camera", "imageWriter");
+        }
+
+        if(rayTracer == null){
+            throw new MissingResourceException("Ray tracer base writer not given","Camera", "rayTracerBase");
+        }
+
+        //TODO
+        for(int i = 0; i < 800; i++){
+            for(int j = 0; j < 500; j++){
+                imageWriter.writePixel(i,j,i % 50 == 0 || j % 50 == 0 ? new Color(52,100,235): new Color(235,64,52));
+            }
+        }
+    }
 
     /**
 
@@ -89,8 +144,8 @@ public class Camera {
      */
     public Ray constructRay(int nX, int nY, int j, int i){
         Point pC = location.add(vTo.Scale(VPDistance));
-        var rY = alignZero(VPHeight/nY);
-        var rX = alignZero(VPWidth/nX);
+        var rY = VPHeight/nY;
+        var rX = VPWidth/nX;
         var yI = -(i-(nY-1)/2.0) * rY;
         var xJ = (j-(nX-1)/2.0) * rX;
 
@@ -98,4 +153,54 @@ public class Camera {
         pIJ = isZero(xJ) ? pIJ : pIJ.add(vRight.Scale(xJ));
         return new Ray(location, pIJ.subtract(location));
     }
+
+    public Camera setImageWriter(ImageWriter imageWriter) {
+        this.imageWriter = imageWriter;
+        return this;
+    }
+
+    public Camera setRayTracer(RayTracerBase rayTracerBase) {
+        this.rayTracer = rayTracerBase;
+        return this;
+    }
+
+    /**
+
+     This method prints a grid on the image with the given interval and color.
+
+     Throws a MissingResourceException if imageWriter is not initialized.
+
+     @param interval The interval between each line of the grid
+
+     @param color The color of the grid lines
+     */
+    public void printGrid(int interval, Color color){
+
+        if(imageWriter == null){
+            throw new MissingResourceException("Image writer not given","Camera", "imageWriter");
+        }
+        for(int i = 0; i < VPWidth; i++){
+            for(int j = 0; j < VPHeight; j++){
+                if (i % interval == 0 || j % interval == 0) imageWriter.writePixel(i,j,color);
+            }
+        }
+
+    }
+
+    /**
+
+     This method writes the image to file using the imageWriter.
+     Throws a MissingResourceException if imageWriter is not initialized.
+     */
+    public void writeToImage(){
+        if(imageWriter == null){
+            throw new MissingResourceException("Image writer not given","Camera", "imageWriter");
+        }
+        imageWriter.writeToImage();
+    }
+
+    private Color castRay(int nX, int nY, int j, int i){
+        return rayTracer.traceRay(constructRay(nX, nY, j, i));
+    }
+
 }
