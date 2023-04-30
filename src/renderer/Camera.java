@@ -83,10 +83,10 @@ public class Camera {
             throw new MissingResourceException("Ray tracer base writer not given","Camera", "rayTracerBase");
         }
 
-        //TODO
-        for(int i = 0; i < 800; i++){
-            for(int j = 0; j < 500; j++){
-                imageWriter.writePixel(i,j,i % 50 == 0 || j % 50 == 0 ? new Color(52,100,235): new Color(235,64,52));
+        int width = imageWriter.getNx(), height = imageWriter.getNy();
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                imageWriter.writePixel(j, i,castRay(width, height, j, i));
             }
         }
     }
@@ -179,8 +179,8 @@ public class Camera {
         if(imageWriter == null){
             throw new MissingResourceException("Image writer not given","Camera", "imageWriter");
         }
-        for(int i = 0; i < VPWidth; i++){
-            for(int j = 0; j < VPHeight; j++){
+        for(int i = 0; i < imageWriter.getNx(); i++){
+            for(int j = 0; j < imageWriter.getNy(); j++){
                 if (i % interval == 0 || j % interval == 0) imageWriter.writePixel(i,j,color);
             }
         }
