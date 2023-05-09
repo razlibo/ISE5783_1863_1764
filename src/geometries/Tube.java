@@ -36,7 +36,7 @@ public class Tube extends RadialGeometry {
             return p.subtract(axisRay.getP0()).normalize();
         }
         double t = axisRay.getDir().dotProduct(p.subtract(axisRay.getP0()));
-        Point O = axisRay.getP0().add(axisRay.getDir().Scale(t));
+        Point O = axisRay.getP0().add(axisRay.getDir().scale(t));
         return p.subtract(O).normalize();
     }
 
@@ -49,8 +49,9 @@ public class Tube extends RadialGeometry {
         return axisRay;
     }
 
+
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         return null;
     }
 }

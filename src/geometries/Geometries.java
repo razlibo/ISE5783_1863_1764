@@ -6,7 +6,7 @@ import primitives.Ray;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Geometries implements Intersectable{
+public class Geometries extends Intersectable{
 
     private LinkedList<Intersectable> bodies;
 
@@ -29,11 +29,12 @@ public class Geometries implements Intersectable{
             bodies.add(geometry);
         }
     }
+
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        LinkedList<Point> list = null;
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        LinkedList<GeoPoint> list = null;
         for (Intersectable body : bodies) {
-            var temp = body.findIntersections(ray);
+            var temp = body.findGeoIntersections(ray);
             if (temp != null){
                 if (list == null) list = new LinkedList<>();
                 list.addAll(temp);

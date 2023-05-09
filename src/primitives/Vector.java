@@ -61,7 +61,7 @@ public class Vector extends Point {
      * @param d number to scale
      * @return result of scale
      */
-    public Vector Scale(double d) {
+    public Vector scale(double d) {
         return new Vector(this.xyz.scale(d));
     }
 

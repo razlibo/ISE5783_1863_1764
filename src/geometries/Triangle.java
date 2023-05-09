@@ -2,7 +2,10 @@ package geometries;
 
 import primitives.Point;
 import primitives.Ray;
+
 import static primitives.Util.*;
+
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -23,7 +26,7 @@ public class Triangle extends Polygon {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         var v1 = this.vertices.get(0).subtract(ray.getP0());
         var v2 = this.vertices.get(1).subtract(ray.getP0());
         var v3 = this.vertices.get(2).subtract(ray.getP0());
@@ -31,8 +34,11 @@ public class Triangle extends Polygon {
         var n2 = v2.crossProduct(v3).normalize();
         var n3 = v3.crossProduct(v1).normalize();
         var v = ray.getDir();
-        if((alignZero(v.dotProduct(n1)) > 0 && alignZero(v.dotProduct(n2)) > 0 && alignZero(v.dotProduct(n3)) > 0) || (alignZero(v.dotProduct(n1)) < 0 && alignZero(v.dotProduct(n2)) < 0 && alignZero(v.dotProduct(n3)) < 0)){
-            return new Plane(this.vertices.get(0), this.vertices.get(1), this.vertices.get(2)).findIntersections(ray);
+        if ((alignZero(v.dotProduct(n1)) > 0 && alignZero(v.dotProduct(n2)) > 0 && alignZero(v.dotProduct(n3)) > 0) ||
+                (alignZero(v.dotProduct(n1)) < 0 && alignZero(v.dotProduct(n2)) < 0 && alignZero(v.dotProduct(n3)) < 0)) {
+            List<GeoPoint> points = new Plane(vertices.get(0), vertices.get(1), vertices.get(2)).findGeoIntersections(ray);
+
+            return points == null ? null : points.stream().map(gp -> new GeoPoint(this, gp.point)).toList();
         }
         return null;
     }
