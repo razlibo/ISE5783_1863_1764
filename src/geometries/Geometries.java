@@ -10,10 +10,17 @@ public class Geometries extends Intersectable{
 
     private LinkedList<Intersectable> bodies;
 
+
+    /**
+     * empty constructor for Geometries
+     */
     public Geometries(){
         bodies = new LinkedList<>();
     }
 
+    /**
+     * constructor for Geometries
+     */
     public Geometries(Intersectable... geometries){
         this();
 

@@ -5,39 +5,37 @@ import primitives.Ray;
 
 import java.util.List;
 
+
 /**
- * interface for intersectable object
- *
- * @author Raz Leibovitch
+
+ The Intersectable class represents an abstract geometric object that can be intersected by a Ray object.
+
+ Concrete subclasses of Intersectable must implement the findGeoIntersectionsHelper method, which returns a list of
+
+ GeoPoint objects representing the intersection points between the object and a given Ray object.
  */
 public abstract class Intersectable {
 
     /**
-     * Function to find intersections between ray and geometry body
-     * @param ray The ray to find intersections
-     * @return list of points of intersections
-     */
-    public List<Point> findIntersections(Ray ray) {
-        var geoList = findGeoIntersections(ray);
-        return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
-    }
-
-
-    /**
-     * A class representing a geographic point, with a corresponding geometry and point.
+     The GeoPoint class represents a single intersection point between a Ray object and a Geometry object.
      */
     public static class GeoPoint {
 
         /**
-         * The geometry associated with this point.
+         The Geometry object that was intersected
          */
         public Geometry geometry;
 
         /**
-         * The point coordinates.
+         The Point object representing the intersection point
          */
         public Point point;
 
+        /**
+         Constructs a new GeoPoint object with the given Geometry object and Point object.
+         @param geometry the Geometry object that was intersected
+         @param point the Point object representing the intersection point
+         */
         public GeoPoint(Geometry geometry, Point point) {
             this.geometry = geometry;
             this.point = point;
@@ -64,6 +62,26 @@ public abstract class Intersectable {
         return findGeoIntersectionsHelper(ray);
     }
 
-    //TODO implement in subclasses
+    /**
+     Finds the intersection points between the Intersectable object and the given Ray object.
+     This method is implemented by concrete subclasses of Intersectable and returns a list of GeoPoint objects
+     representing the intersection points between the object and the Ray object.
+     @param ray the Ray object to intersect with the Intersectable object
+     @return a list of GeoPoint objects representing the intersection points between the two objects, or null if no
+     intersection points were found
+     */
     protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
+
+    /**
+     Finds the intersection points between the Intersectable object and the given Ray object.
+     This method calls findGeoIntersections to get a list of GeoPoint objects, then maps each GeoPoint to its
+     Point attribute and returns a list of those Points.
+     @param ray the Ray object to intersect with the Intersectable object
+     @return a list of Point objects representing the intersection points between the two objects, or null if no
+     intersection points were found
+     */
+    public List<Point> findIntersections(Ray ray) {
+        var geoList = findGeoIntersections(ray);
+        return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
+    }
 }
