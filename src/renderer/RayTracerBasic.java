@@ -16,6 +16,9 @@ import static primitives.Util.alignZero;
  */
 public class RayTracerBasic extends RayTracerBase {
 
+    private static final int MAX_CALC_COLOR_LEVEL = 10;
+    private static final double MIN_CALC_COLOR_K = 0.001;
+
     /**
      * Delta for moving the ray
      */
@@ -45,8 +48,9 @@ public class RayTracerBasic extends RayTracerBase {
      * @param ray      the ray that intersected with the point
      * @return the color of the point after taking emission and local effects into account
      */
-    private Color calcColor(GeoPoint geoPoint, Ray ray) {
-        return scene.ambientLight.getIntensity().add(calcLocalEffects(geoPoint, ray));
+    private Color calcColor(GeoPoint geoPoint, Ray ray, int level, Double3 k) {
+        var color =  scene.ambientLight.getIntensity().add(calcLocalEffects(geoPoint, ray));
+        return 1 == level ? color: color.add(calcGlobalEffects(geoPoint,ray,level,k));
     }
 
     /**
@@ -79,6 +83,17 @@ public class RayTracerBasic extends RayTracerBase {
             }
         }
         return color;
+    }
+
+    private Color calcGlobalEffects(GeoPoint gp, Ray ray, int level, Double3 k){
+        Color color = Color.BLACK;
+        Material met = gp.geometry.getMaterial();
+        Double3 kr = met.getkR(), kkr = k.product(kr);
+        if(!kkr.lowerThan(MIN_CALC_COLOR_K)){
+            var reflectedRay = ray.getDir();
+            var reflectedPoint = reflectedRay;
+            //color.add(calcColor(reflectedPoint,reflectedRay,level-1,kkr).scale(kr));
+        }
     }
 
     /**

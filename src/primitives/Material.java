@@ -4,8 +4,18 @@ package primitives;
  * Represents the material of a geometrical object, such as its diffuse and specular coefficients and shininess.
  */
 public class Material {
-    /*
 
+    /**
+     * The transparency coefficient of the material.
+     */
+    public Double3 kT = Double3.ZERO;
+
+    /**
+     * The reflection coefficient of the material.
+     */
+    public Double3 kR = Double3.ZERO;
+
+    /**
     The diffuse reflection coefficient of the material.
     */
     public Double3 kD = new Double3(0);
@@ -17,6 +27,46 @@ public class Material {
      * The shininess of the material.
      */
     public int nShininess = 0;
+
+    /**
+     * Sets the transparency coefficient of the material.
+     * @param kT to set
+     * @return Material object
+     */
+    public Material setkT(Double3 kT) {
+        this.kT = kT;
+        return this;
+    }
+
+    /**
+     * Sets the reflection coefficient of the material.
+     * @param kR to set
+     * @return Materiel object
+     */
+    public Material setkR(Double3 kR) {
+        this.kR = kR;
+        return this;
+    }
+
+    /**
+     * Sets the transparency coefficient of the material.
+     * @param kT to set
+     * @return Material object
+     */
+    public Material setkT(double kT) {
+        this.kT = new Double3(kT,kT,kT);
+        return this;
+    }
+
+    /**
+     * Sets the reflection coefficient of the material.
+     * @param kR to set
+     * @return Materiel object
+     */
+    public Material setkR(double kR) {
+        this.kR = new Double3(kR,kR,kR);
+        return this;
+    }
 
     /**
      * Sets the diffuse reflection coefficient of the material.
@@ -49,6 +99,10 @@ public class Material {
     public Material setShininess(int nShininess) {
         this.nShininess = nShininess;
         return this;
+    }
+
+    public Double3 getkR() {
+        return kR;
     }
 
     /**
