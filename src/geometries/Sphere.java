@@ -40,7 +40,7 @@ public class Sphere extends RadialGeometry {
     public Vector getNormal(Point p) { return p.subtract(this.center).normalize(); }
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray,double maxDis) {
         double tm = 0, d = 0;
         if(!this.center.equals(ray.getP0())) {
             var u = this.center.subtract(ray.getP0());
@@ -56,11 +56,11 @@ public class Sphere extends RadialGeometry {
         var t2 = tm - th;
         List<Point> lst = new LinkedList<>();
 
-        if(t1 > 0 && !isZero(t1)){
+        if(t1 > 0 && !isZero(t1) &&  alignZero(t2 - maxDis) <= 0){
             lst.add(ray.getPoint(t1));
         }
 
-        if(t2 > 0 && !isZero(t2)){
+        if(t2 > 0 && !isZero(t2) &&  alignZero(t2 - maxDis) <= 0){
             lst.add(ray.getPoint(t2));
         }
         if(lst.isEmpty())

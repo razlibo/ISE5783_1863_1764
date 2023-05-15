@@ -5,6 +5,8 @@ import lighting.LightSource;
 import primitives.*;
 import scene.Scene;
 
+import java.util.List;
+
 import static primitives.Util.alignZero;
 
 /**
@@ -14,6 +16,10 @@ import static primitives.Util.alignZero;
  */
 public class RayTracerBasic extends RayTracerBase {
 
+    /**
+     * Delta for moving the ray
+     */
+    private static final double DELTA = 0.1;
     /**
      * Constructs a new RayTracerBasic object with a given scene.
      *
@@ -65,10 +71,11 @@ public class RayTracerBasic extends RayTracerBase {
             Vector l = lightSource.getL(geoPoint.point);
             double nl = alignZero(n.dotProduct(l));
             if (nl * nv > 0) { // sign(nl) == sing(nv)
-                Color iL = lightSource.getIntensity(geoPoint.point);
-                color = color.add(iL.scale(calcDiffusive(material, nl)),
-                        iL.scale(calcSpecular(material, n, l, nl, v)));
-
+                if(unshaded(geoPoint,lightSource,l,n,nl)) {
+                    Color iL = lightSource.getIntensity(geoPoint.point);
+                    color = color.add(iL.scale(calcDiffusive(material, nl)),
+                            iL.scale(calcSpecular(material, n, l, nl, v)));
+                }
             }
         }
         return color;
@@ -97,8 +104,28 @@ public class RayTracerBasic extends RayTracerBase {
      * @return the specular component of the color of the point
      */
     private Double3 calcSpecular(Material material, Vector n, Vector l, double nl, Vector v) {
-        // var r = l.subtract(n.scale(2*(nl)));
         var r = n.scale(2 * nl).subtract(l);
         return material.kS.scale(Math.pow(Math.max(0, v.dotProduct(r)), material.nShininess));
+    }
+
+
+
+    /**
+     Checks if a given {@link GeoPoint} is unshaded by a {@link LightSource}.
+     @param gp The {@link GeoPoint} to check for shading.
+     @param light The {@link LightSource} in the scene.
+     @param l The direction vector from the point to the light source.
+     @param n The surface normal vector at the point.
+     @param nl The dot product between the surface normal and the light direction vector.
+     @return {@code true} if the point is unshaded, {@code false} otherwise.
+     */
+    private boolean unshaded(GeoPoint gp, LightSource light, Vector l, Vector n, double nl)
+    {
+        Vector lightDirection = l.scale(-1); // from point to light source
+        Vector epsVector = n.scale(nl < 0 ? DELTA : -DELTA);
+        Point point = gp.point.add(epsVector);
+        Ray lightRay = new Ray(point, lightDirection);
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay, light.getDistance(gp.point));
+        return intersections == null;
     }
 }

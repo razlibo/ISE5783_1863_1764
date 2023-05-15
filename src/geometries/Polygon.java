@@ -95,9 +95,13 @@ public class Polygon extends Geometry {
     }
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDis) {
 
         Vector[] vectors = new Vector[vertices.size()], dotProductVectors = new Vector[vertices.size()];
+
+        List<GeoPoint> points = new Plane(vertices.get(0), vertices.get(1), vertices.get(2)).findGeoIntersections(ray, maxDis);
+
+        if(points == null) return null;
 
         for (int i = 0; i < vectors.length; i++) {
             vectors[i] = this.vertices.get(i).subtract(ray.getP0());
@@ -110,8 +114,7 @@ public class Polygon extends Geometry {
         for (int i = 0; i < vectors.length; i++) {
             if (alignZero(ray.getDir().dotProduct(dotProductVectors[i])) <= 0) return null;
         }
-        List<GeoPoint> points = new Plane(vertices.get(0), vertices.get(1), vertices.get(2)).findGeoIntersections(ray);
 
-        return points == null ? null : points.stream().map(gp -> new GeoPoint(this, gp.point)).toList();
+        return points.stream().map(gp -> new GeoPoint(this, gp.point)).toList();
     }
 }

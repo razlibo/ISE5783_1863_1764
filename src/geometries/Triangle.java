@@ -26,7 +26,10 @@ public class Triangle extends Polygon {
     }
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDis) {
+        List<GeoPoint> points = new Plane(vertices.get(0), vertices.get(1), vertices.get(2)).findGeoIntersections(ray, maxDis);
+        if(points == null) return null;
+
         var v1 = this.vertices.get(0).subtract(ray.getP0());
         var v2 = this.vertices.get(1).subtract(ray.getP0());
         var v3 = this.vertices.get(2).subtract(ray.getP0());
@@ -36,9 +39,7 @@ public class Triangle extends Polygon {
         var v = ray.getDir();
         if ((alignZero(v.dotProduct(n1)) > 0 && alignZero(v.dotProduct(n2)) > 0 && alignZero(v.dotProduct(n3)) > 0) ||
                 (alignZero(v.dotProduct(n1)) < 0 && alignZero(v.dotProduct(n2)) < 0 && alignZero(v.dotProduct(n3)) < 0)) {
-            List<GeoPoint> points = new Plane(vertices.get(0), vertices.get(1), vertices.get(2)).findGeoIntersections(ray);
-
-            return points == null ? null : points.stream().map(gp -> new GeoPoint(this, gp.point)).toList();
+            return points.stream().map(gp -> new GeoPoint(this, gp.point)).toList();
         }
         return null;
     }
