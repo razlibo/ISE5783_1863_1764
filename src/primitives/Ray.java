@@ -4,12 +4,19 @@ import geometries.Intersectable.GeoPoint;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
+
 /**
  * This class will present Ray object
  *
  * @author Raz
  */
 public class Ray {
+
+    /**
+     * Delta for moving the ray
+     */
+    private static final double DELTA = 0.1;
     /**
      * Vector in the space
      */
@@ -30,6 +37,10 @@ public class Ray {
     public Ray(Point p, Vector v) {
         this.dir = v.normalize();
         this.p0 = p;
+    }
+
+    public static Ray constructRefractedRay(GeoPoint gp, Vector v, Vector n) {
+        return new Ray(gp.point, v, n);
     }
 
     /**
@@ -86,5 +97,14 @@ public class Ray {
             }
         }
         return min;
+    }
+
+    public Ray(Point head, Vector dir, Vector n){
+        double nl = alignZero(n.dotProduct(dir));
+        this.p0 = nl == 0 ? head : head.add(n.scale(nl < 0 ? -DELTA : DELTA));
+        this.dir = dir;
+    }
+    public static Ray constructReflectedRay(GeoPoint gp, Vector v, Vector n){
+        return new Ray(gp.point, n.scale(2 * alignZero(n.dotProduct(v))).subtract(v), n);
     }
 }

@@ -44,4 +44,6 @@ public class SpotLight extends PointLight{
 
     @Override
     public Vector getL(Point p) {return super.getL(p);}
+
+
 }

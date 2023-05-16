@@ -54,7 +54,7 @@ public class Material {
      * @return Material object
      */
     public Material setkT(double kT) {
-        this.kT = new Double3(kT,kT,kT);
+        this.kT = new Double3(kT);
         return this;
     }
 
@@ -64,7 +64,7 @@ public class Material {
      * @return Materiel object
      */
     public Material setkR(double kR) {
-        this.kR = new Double3(kR,kR,kR);
+        this.kR = new Double3(kR);
         return this;
     }
 
