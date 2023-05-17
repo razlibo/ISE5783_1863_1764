@@ -39,10 +39,6 @@ public class Ray {
         this.p0 = p;
     }
 
-    public static Ray constructRefractedRay(GeoPoint gp, Vector v, Vector n) {
-        return new Ray(gp.point, v, n);
-    }
-
     /**
      * get the point
      * @param t for scale in dir
@@ -99,12 +95,15 @@ public class Ray {
         return min;
     }
 
+    /**
+     * Construct ray that is moved by the delta in the normal/-normal direction
+     * @param head the ray head
+     * @param dir the direction
+     * @param n the normal
+     */
     public Ray(Point head, Vector dir, Vector n){
         double nl = alignZero(n.dotProduct(dir));
         this.p0 = nl == 0 ? head : head.add(n.scale(nl < 0 ? -DELTA : DELTA));
-        this.dir = dir;
-    }
-    public static Ray constructReflectedRay(GeoPoint gp, Vector v, Vector n){
-        return new Ray(gp.point, n.scale(2 * alignZero(n.dotProduct(v))).subtract(v), n);
+        this.dir = dir.normalize();
     }
 }

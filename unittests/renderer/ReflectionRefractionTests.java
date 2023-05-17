@@ -51,6 +51,7 @@ public class ReflectionRefractionTests {
 
       scene.setAmbientLight(new AmbientLight(new Color(255, 255, 255), 0.1));
 
+
       scene.geometries.add( //
                            new Sphere(400d, new Point(-950, -900, -1000)).setEmission(new Color(0, 50, 100)) //
                               .setMaterial(new Material().setKd(0.25).setKs(0.25).setShininess(20)
