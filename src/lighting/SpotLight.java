@@ -45,5 +45,21 @@ public class SpotLight extends PointLight{
     @Override
     public Vector getL(Point p) {return super.getL(p);}
 
+    @Override
+    public SpotLight setkC(double kC) {
+        this.kC = kC;
+        return this;
+    }
 
+    @Override
+    public SpotLight setkL(double kL) {
+        this.kL = kL;
+        return this;
+    }
+
+    @Override
+    public SpotLight setkQ(double kQ) {
+        this.kQ = kQ;
+        return this;
+    }
 }

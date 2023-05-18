@@ -99,7 +99,7 @@ public class Polygon extends Geometry {
 
         Vector[] vectors = new Vector[vertices.size()], dotProductVectors = new Vector[vertices.size()];
 
-        List<GeoPoint> points = new Plane(vertices.get(0), vertices.get(1), vertices.get(2)).findGeoIntersections(ray, maxDis);
+        List<GeoPoint> points = plane.findGeoIntersections(ray, maxDis);
 
         if(points == null) return null;
 

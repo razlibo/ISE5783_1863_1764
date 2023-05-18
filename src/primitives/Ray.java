@@ -5,6 +5,7 @@ import geometries.Intersectable.GeoPoint;
 import java.util.List;
 
 import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 /**
  * This class will present Ray object
@@ -103,7 +104,7 @@ public class Ray {
      */
     public Ray(Point head, Vector dir, Vector n){
         double nl = alignZero(n.dotProduct(dir));
-        this.p0 = nl == 0 ? head : head.add(n.scale(nl < 0 ? -DELTA : DELTA));
+        this.p0 = isZero(nl) ? head : head.add(n.scale(nl < 0 ? -DELTA : DELTA));
         this.dir = dir.normalize();
     }
 }
