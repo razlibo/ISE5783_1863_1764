@@ -5,12 +5,9 @@ package renderer;
 
 import static java.awt.Color.*;
 
-import geometries.Geometry;
-import geometries.Plane;
+import geometries.*;
 import org.junit.jupiter.api.Test;
 
-import geometries.Sphere;
-import geometries.Triangle;
 import lighting.AmbientLight;
 import lighting.SpotLight;
 import primitives.*;
@@ -227,4 +224,120 @@ public class ReflectionRefractionTests {
                 .renderImage()
                 .writeToImage();
     }
+
+   @Test
+   public void anotherMultipleObjectTest() {
+      Scene scene = new Scene("anotherMultipleObjectTest");
+
+      // Set up camera
+      Camera camera = new Camera(
+              new Point(0, 0, 1000),
+              new Vector(0, 0, -1),
+              new Vector(0, 1, 0)
+      ).setVPSize(200, 200)
+              .setVPDistance(850);
+
+      // Set ambient light
+      scene.setAmbientLight(new AmbientLight(new Color(30, 30, 30), 0.1));
+
+      // Add geometries to the scene
+      // Plane
+      Geometry plane = new Plane(
+              new Point(0, 0, 0),
+              new Vector(0, 0, 1)
+      ).setEmission(new Color(0, 20, 20));
+      plane.setMaterial(new Material()
+              .setKd(0.5)
+              .setKs(0.5)
+              .setShininess(60)
+              .setkR(0.02)
+      );
+      scene.geometries.add(plane);
+
+      // Spheres
+      Sphere[] spheres = new Sphere[4];
+      spheres[0] = new Sphere(50, new Point(0, -50, 50));
+      spheres[1] = new Sphere(30, new Point(70, 70, 30));
+      spheres[2] = new Sphere(20, new Point(70, 70, 30));
+      spheres[3] = new Sphere(40, new Point(-70, 70, 30));
+
+      for (int i = 0; i < spheres.length; i++) {
+         Sphere sphere = spheres[i];
+         sphere.setMaterial(new Material()
+                 .setKd(0.6)
+                 .setKs(0.4)
+                 .setShininess(100)
+                 .setkR(0.3)
+         );
+         sphere.setEmission(new Color((i + 1) * 50, i * 100, (i + 1) * 100));
+         scene.geometries.add(sphere);
+      }
+
+      // Triangles
+      Triangle[] triangles = new Triangle[4];
+      triangles[0] = new Triangle(
+              new Point(-100, -100, 0),
+              new Point(100, -100, 0),
+              new Point(0, 100, 0)
+      );
+      triangles[1] = new Triangle(
+              new Point(-120, -50, 30),
+              new Point(-120, 50, 30),
+              new Point(0, 0, 100)
+      );
+      triangles[2] = new Triangle(
+              new Point(-50, -50, 50),
+              new Point(50, -50, 50),
+              new Point(0, 50, 50)
+      );
+      triangles[3] = new Triangle(
+              new Point(-80, -30, 30),
+              new Point(-80, 30, 30),
+              new Point(0, 0, 80)
+      );
+
+      for (int i = 0; i < triangles.length; i++) {
+         Triangle triangle = triangles[i];
+         triangle.setMaterial(new Material()
+                 .setKd(0.6)
+                 .setKs(0.4)
+                 .setShininess(50)
+                 .setkR(0.2)
+         );
+         triangle.setEmission(new Color(i * 100, (i + 1) * 50, (i + 1) * 100));
+         scene.geometries.add(triangle);
+      }
+
+       // Polygon
+       Point[] vertices = new Point[]{
+               new Point(-50, 0, -50),
+               new Point(-50, 0, 50),
+               new Point(50, 0, 50),
+               new Point(50, 0, -50)
+       };
+       Polygon polygon = new Polygon(vertices);
+       polygon.setMaterial(new Material()
+               .setKd(0.8)
+               .setKs(0.6)
+               .setShininess(70)
+               .setkR(0.2)
+       );
+       polygon.setEmission(new Color(255, 255, 0));
+       scene.geometries.add(polygon);
+
+
+      // Add lights to the scene
+      SpotLight spotLight = new SpotLight(
+              new Color(1000, 1000, 1000),
+              new Point(-100, 100, 100),
+              new Vector(1, -1, -1)).setkL(0.0004).setkQ(0.0001);
+      scene.lights.add(spotLight);
+
+      // Render the scene
+      ImageWriter imageWriter = new ImageWriter("anotherMultipleObjectTest", 600, 600);
+      camera.setImageWriter(imageWriter)
+              .setRayTracer(new RayTracerBasic(scene))
+              .renderImage()
+              .writeToImage();
+   }
 }
