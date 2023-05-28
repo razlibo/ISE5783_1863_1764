@@ -26,7 +26,7 @@ public class Material {
     /**
      * The shininess of the material.
      */
-    public int nShininess = 0;
+    public int nShininess = 1;
 
     /**
      * Sets the transparency coefficient of the material.

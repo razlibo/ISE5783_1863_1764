@@ -5,8 +5,12 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 import java.util.MissingResourceException;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 /**
@@ -49,6 +53,12 @@ public class Camera {
      * The distance between the camera and the view plane
      */
     private double VPDistance;
+
+    /** Aperture radius; */
+    double apertureRadius = 5;
+
+    /** Focal length */
+    double focalLength = 100;
 
     /**
      * Constructs a camera object with the specified position, direction, and up direction vectors.
@@ -109,7 +119,8 @@ public class Camera {
         int width = imageWriter.getNx(), height = imageWriter.getNy();
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                imageWriter.writePixel(j, i, rayTracer.traceRay(constructRay(width, height, j, i)));
+                var focalPoint = constructRay(width, height, j, i).getPoint(focalLength);
+                imageWriter.writePixel(j, i, rayTracer.traceMultipleRays(constructRaysFromApertureArea(focalPoint)));
             }
         }
         return this;
@@ -200,5 +211,22 @@ public class Camera {
             throw new MissingResourceException("Image writer not given", "Camera", "imageWriter");
         }
         imageWriter.writeToImage();
+    }
+
+    private boolean checkIfInTheApertureArea(Point point){
+        return location.distance(point) <= apertureRadius;
+    }
+
+    private List<Ray> constructRaysFromApertureArea(Point focalPoint){
+        List<Ray> rays = new LinkedList<>();
+        for(double i = -apertureRadius; i < apertureRadius; i+= apertureRadius/5){
+            if(isZero(i)) continue;
+            for(double j = -apertureRadius; j < apertureRadius; j+= apertureRadius/5){
+                if(isZero(j)) continue;
+                var p = location.add(vUp.scale(i).add(vRight.scale(j)));
+                if(checkIfInTheApertureArea(p)) rays.add(new Ray(p,focalPoint.subtract(p)));
+            }
+        }
+        return rays;
     }
 }

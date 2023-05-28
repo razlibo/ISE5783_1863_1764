@@ -209,23 +209,6 @@ public class RayTracerBasic extends RayTracerBase {
         return material.kS.scale(Math.pow(Math.max(0, v.dotProduct(r)), material.nShininess));
     }
 
-
-    /**
-     * Checks if a given {@link GeoPoint} is unshaded by a {@link LightSource}.
-     *
-     * @param gp    The {@link GeoPoint} to check for shading.
-     * @param light The {@link LightSource} in the scene.
-     * @param l     The direction vector from the point to the light source.
-     * @param n     The surface normal vector at the point.
-     * @return {@code true} if the point is unshaded, {@code false} otherwise.
-     */
-    private boolean unshaded(GeoPoint gp, LightSource light, Vector l, Vector n) {
-        Vector lightDirection = l.scale(-1); // from point to light source
-        Ray lightRay = new Ray(gp.point, lightDirection, n);
-        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay, light.getDistance(gp.point));
-        return intersections == null;
-    }
-
     /**
      * construct the refracted ray of given ray and point
      * @param gp the point
@@ -246,4 +229,8 @@ public class RayTracerBasic extends RayTracerBase {
     public static Ray constructReflectedRay(GeoPoint gp, Vector v, Vector n){
         return new Ray(gp.point, v.subtract(n.scale(2 * alignZero(n.dotProduct(v)))), n);
     }
+
+
+
+
 }

@@ -4,6 +4,8 @@ import primitives.Color;
 import primitives.Ray;
 import scene.Scene;
 
+import java.util.List;
+
 /**
  The RayTracerBase class serves as the base class for all ray-tracing classes.
  It holds a reference to the scene object and provides an abstract method for tracing a single ray.
@@ -28,4 +30,13 @@ public abstract class RayTracerBase {
      @return the resulting color
      */
     public abstract Color traceRay(Ray ray);
+
+    public Color traceMultipleRays(List<Ray> rayList){
+        int size = rayList.size();
+        Color avgColor = Color.BLACK;
+        for(Ray ray: rayList){
+            avgColor =  avgColor.add(traceRay(ray).scale(1.0/size));
+        }
+        return avgColor;
+    }
 }
