@@ -54,11 +54,14 @@ public class Camera {
      */
     private double VPDistance;
 
-    /** Aperture radius; */
-    double apertureRadius = 5;
+    /** Aperture radius */
+    double apertureRadius = 0;
 
     /** Focal length */
-    double focalLength = 100;
+    double focalLength = 0;
+
+    /** DoF active */
+    boolean DoFActive = false;
 
     /**
      * Constructs a camera object with the specified position, direction, and up direction vectors.
@@ -115,12 +118,27 @@ public class Camera {
         if (rayTracer == null) {
             throw new MissingResourceException("Ray tracer base writer not given", "Camera", "rayTracerBase");
         }
+        if (apertureRadius == 0 && DoFActive) {
+            throw new MissingResourceException("Aperture radius not set", "Camera", "apertureRadius");
+        }
+        if (focalLength == 0  && DoFActive) {
+            throw new MissingResourceException("Focal length not set", "Camera", "focalLength");
+        }
 
         int width = imageWriter.getNx(), height = imageWriter.getNy();
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                var focalPoint = constructRay(width, height, j, i).getPoint(focalLength);
-                imageWriter.writePixel(j, i, rayTracer.traceMultipleRays(constructRaysFromApertureArea(focalPoint)));
+
+        if(DoFActive) {
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    var focalPoint = constructRay(width, height, j, i).getPoint(focalLength);
+                    imageWriter.writePixel(j, i, rayTracer.traceMultipleRays(constructRaysFromApertureArea(focalPoint)));
+                }
+            }
+        }else {
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    imageWriter.writePixel(j, i, rayTracer.traceRay(constructRay(width, height, j, i)));
+                }
             }
         }
         return this;
@@ -181,6 +199,21 @@ public class Camera {
         return this;
     }
 
+    public Camera setApertureRadius(double apertureRadius) {
+        this.apertureRadius = apertureRadius;
+        return this;
+    }
+
+    public Camera setFocalLength(double focalLength) {
+        this.focalLength = focalLength;
+        return this;
+    }
+
+    public Camera setDoFActive(boolean doFActive) {
+        DoFActive = doFActive;
+        return this;
+    }
+
     /**
      * This method prints a grid on the image with the given interval and color.
      * <p>
@@ -218,13 +251,14 @@ public class Camera {
     }
 
     private List<Ray> constructRaysFromApertureArea(Point focalPoint){
+        Random random = new Random();
         List<Ray> rays = new LinkedList<>();
-        for(double i = -apertureRadius; i < apertureRadius; i+= apertureRadius/5){
+        for(double i = -apertureRadius; i < apertureRadius; i+= apertureRadius/7){
             if(isZero(i)) continue;
-            for(double j = -apertureRadius; j < apertureRadius; j+= apertureRadius/5){
+            for(double j = -apertureRadius; j < apertureRadius; j+= apertureRadius/7){
                 if(isZero(j)) continue;
-                var p = location.add(vUp.scale(i).add(vRight.scale(j)));
-                if(checkIfInTheApertureArea(p)) rays.add(new Ray(p,focalPoint.subtract(p)));
+                var p = location.add(vUp.scale(i).add(vRight.scale(j + random.nextDouble(-0.1,0.1))));
+                if(location.distance(p) <= apertureRadius) rays.add(new Ray(p,focalPoint.subtract(p)));
             }
         }
         return rays;
