@@ -246,18 +246,15 @@ public class Camera {
         imageWriter.writeToImage();
     }
 
-    private boolean checkIfInTheApertureArea(Point point){
-        return location.distance(point) <= apertureRadius;
-    }
-
     private List<Ray> constructRaysFromApertureArea(Point focalPoint){
         Random random = new Random();
         List<Ray> rays = new LinkedList<>();
         for(double i = -apertureRadius; i < apertureRadius; i+= apertureRadius/7){
             if(isZero(i)) continue;
+            double jitterOffset =  random.nextDouble(-0.1,0.1);
             for(double j = -apertureRadius; j < apertureRadius; j+= apertureRadius/7){
                 if(isZero(j)) continue;
-                var p = location.add(vUp.scale(i).add(vRight.scale(j + random.nextDouble(-0.1,0.1))));
+                var p = location.add(vUp.scale(i).add(vRight.scale(j + jitterOffset)));
                 if(location.distance(p) <= apertureRadius) rays.add(new Ray(p,focalPoint.subtract(p)));
             }
         }
