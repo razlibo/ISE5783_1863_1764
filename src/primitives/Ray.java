@@ -2,6 +2,7 @@ package primitives;
 
 import geometries.Intersectable.GeoPoint;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static primitives.Util.alignZero;
@@ -106,5 +107,13 @@ public class Ray {
         double nl = alignZero(n.dotProduct(dir));
         this.p0 = isZero(nl) ? head : head.add(n.scale(nl < 0 ? -DELTA : DELTA));
         this.dir = dir.normalize();
+    }
+
+    public static List<Ray> constructRaysFromListOfPointsToPoint(Point point, List<Point> points){
+        List<Ray> rays = new LinkedList<>();
+        for (Point p:points) {
+            rays.add(new Ray(p, point.subtract(p)));
+        }
+        return rays;
     }
 }

@@ -1,5 +1,11 @@
 package primitives;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import static primitives.Util.isZero;
+
 /**
  * This class will serve primitive classes based on three numbers from Double3
  *
@@ -94,4 +100,19 @@ public class Point {
     public double getY(){return xyz.d2;}
 
     public double getZ(){return xyz.d3;}
+
+    public static List<Point> generatePointsOnCircle(Point center, Vector vUp, Vector vRight, double radius, double gridDensity){
+        Random random = new Random();
+        var points = new ArrayList<Point>();
+        for(double i = -radius; i < radius; i+= radius/gridDensity){
+            if(isZero(i)) continue;
+            double jitterOffset =  random.nextDouble(-0.1,0.1);
+            for(double j = -radius; j < radius; j+= radius/gridDensity){
+                if(isZero(j)) continue;
+                var p = center.add(vUp.scale(i).add(vRight.scale(j + jitterOffset)));
+                if(center.distance(p) <= radius) points.add(p);
+            }
+        }
+        return points;
+    }
 }

@@ -136,11 +136,11 @@ public class Camera {
         int width = imageWriter.getNx(), height = imageWriter.getNy();
 
         if(DoFActive) {
-            this.generatePointsFromApertureArea(gridDensity);
+            this.DoFPoints = Point.generatePointsOnCircle(location, vUp, vRight, apertureRadius, 7);
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
                     var focalPoint = constructRay(width, height, j, i).getPoint(focalLength);
-                    imageWriter.writePixel(j, i, rayTracer.traceMultipleRays(constructRaysFromApertureArea(focalPoint)));
+                    imageWriter.writePixel(j, i, rayTracer.traceMultipleRays(Ray.constructRaysFromListOfPointsToPoint(focalPoint, DoFPoints)));
                 }
             }
         }else {
@@ -259,27 +259,5 @@ public class Camera {
             throw new MissingResourceException("Image writer not given", "Camera", "imageWriter");
         }
         imageWriter.writeToImage();
-    }
-
-    private List<Ray> constructRaysFromApertureArea(Point focalPoint){
-        List<Ray> rays = new LinkedList<>();
-        for (Point p:this.DoFPoints) {
-            rays.add(new Ray(p, focalPoint.subtract(p)));
-        }
-        return rays;
-    }
-
-    private void generatePointsFromApertureArea(int gridDensity){
-        Random random = new Random();
-        this.DoFPoints = new ArrayList<>();
-        for(double i = -apertureRadius; i < apertureRadius; i+= apertureRadius/gridDensity){
-            if(isZero(i)) continue;
-            double jitterOffset =  random.nextDouble(-0.1,0.1);
-            for(double j = -apertureRadius; j < apertureRadius; j+= apertureRadius/gridDensity){
-                if(isZero(j)) continue;
-                var p = location.add(vUp.scale(i).add(vRight.scale(j + jitterOffset)));
-                if(location.distance(p) <= apertureRadius) DoFPoints.add(p);
-            }
-        }
     }
 }
