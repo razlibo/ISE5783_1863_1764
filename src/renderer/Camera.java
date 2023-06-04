@@ -136,7 +136,7 @@ public class Camera {
         int width = imageWriter.getNx(), height = imageWriter.getNy();
 
         if(DoFActive) {
-            this.DoFPoints = Point.generatePointsOnCircle(location, vUp, vRight, apertureRadius, 7);
+            this.DoFPoints = Point.generatePointsOnCircle(location, vUp, vRight, apertureRadius, gridDensity);
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
                     var focalPoint = constructRay(width, height, j, i).getPoint(focalLength);

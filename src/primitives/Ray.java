@@ -109,11 +109,23 @@ public class Ray {
         this.dir = dir.normalize();
     }
 
-    public static List<Ray> constructRaysFromListOfPointsToPoint(Point point, List<Point> points){
+    /**
+
+     Constructs a list of rays from a given point to a list of points.
+
+     @param point the destination point
+
+     @param points the list of points to construct rays from
+
+     @return a list of rays from each point in the list to the destination point
+     */
+    public static List<Ray> constructRaysFromListOfPointsToPoint(Point point, List<Point> points) {
         List<Ray> rays = new LinkedList<>();
-        for (Point p:points) {
+
+        for (Point p : points) {
             rays.add(new Ray(p, point.subtract(p)));
         }
+
         return rays;
     }
 }

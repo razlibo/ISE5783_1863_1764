@@ -100,7 +100,22 @@ public class Point {
     public double getY(){return xyz.d2;}
 
     public double getZ(){return xyz.d3;}
+    /**
 
+     Generates points on a circle given the center, up vector, right vector, radius, and grid density.
+
+     @param center the center point of the circle
+
+     @param vUp the up vector defining the orientation of the circle
+
+     @param vRight the right vector defining the orientation of the circle
+
+     @param radius the radius of the circle
+
+     @param gridDensity the density of the grid used for generating points
+
+     @return a list of points generated on the circle
+     */
     public static List<Point> generatePointsOnCircle(Point center, Vector vUp, Vector vRight, double radius, double gridDensity){
         Random random = new Random();
         var points = new ArrayList<Point>();
