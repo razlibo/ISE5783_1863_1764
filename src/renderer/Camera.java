@@ -5,10 +5,7 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
-import java.util.MissingResourceException;
+import java.util.*;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
@@ -62,6 +59,17 @@ public class Camera {
 
     /** DoF active */
     boolean DoFActive = false;
+
+    /**
+     * DoF points on the aperture plane
+     */
+    List<Point> DoFPoints = null;
+
+
+    /**
+     * Aperture area grid density
+     */
+    int gridDensity = 7;
 
     /**
      * Constructs a camera object with the specified position, direction, and up direction vectors.
@@ -128,6 +136,7 @@ public class Camera {
         int width = imageWriter.getNx(), height = imageWriter.getNy();
 
         if(DoFActive) {
+            this.generatePointsFromApertureArea(gridDensity);
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
                     var focalPoint = constructRay(width, height, j, i).getPoint(focalLength);
@@ -214,6 +223,12 @@ public class Camera {
         return this;
     }
 
+    public Camera setGridDensity(int gridDensity) {
+        this.gridDensity = gridDensity;
+        return this;
+    }
+
+
     /**
      * This method prints a grid on the image with the given interval and color.
      * <p>
@@ -222,7 +237,7 @@ public class Camera {
      * @param interval The interval between each line of the grid
      * @param color    The color of the grid lines
      */
-    public void printGrid(int interval, Color color) {
+    public Camera printGrid(int interval, Color color) {
 
         if (imageWriter == null) {
             throw new MissingResourceException("Image writer not given", "Camera", "imageWriter");
@@ -232,7 +247,7 @@ public class Camera {
                 if (i % interval == 0 || j % interval == 0) imageWriter.writePixel(i, j, color);
             }
         }
-
+        return this;
     }
 
     /**
@@ -247,17 +262,24 @@ public class Camera {
     }
 
     private List<Ray> constructRaysFromApertureArea(Point focalPoint){
-        Random random = new Random();
         List<Ray> rays = new LinkedList<>();
-        for(double i = -apertureRadius; i < apertureRadius; i+= apertureRadius/7){
-            if(isZero(i)) continue;
-            double jitterOffset =  random.nextDouble(-0.1,0.1);
-            for(double j = -apertureRadius; j < apertureRadius; j+= apertureRadius/7){
-                if(isZero(j)) continue;
-                var p = location.add(vUp.scale(i).add(vRight.scale(j + jitterOffset)));
-                if(location.distance(p) <= apertureRadius) rays.add(new Ray(p,focalPoint.subtract(p)));
-            }
+        for (Point p:this.DoFPoints) {
+            rays.add(new Ray(p, focalPoint.subtract(p)));
         }
         return rays;
+    }
+
+    private void generatePointsFromApertureArea(int gridDensity){
+        Random random = new Random();
+        this.DoFPoints = new ArrayList<>();
+        for(double i = -apertureRadius; i < apertureRadius; i+= apertureRadius/gridDensity){
+            if(isZero(i)) continue;
+            double jitterOffset =  random.nextDouble(-0.1,0.1);
+            for(double j = -apertureRadius; j < apertureRadius; j+= apertureRadius/gridDensity){
+                if(isZero(j)) continue;
+                var p = location.add(vUp.scale(i).add(vRight.scale(j + jitterOffset)));
+                if(location.distance(p) <= apertureRadius) DoFPoints.add(p);
+            }
+        }
     }
 }
