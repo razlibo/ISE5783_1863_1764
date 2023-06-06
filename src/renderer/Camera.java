@@ -6,6 +6,7 @@ import primitives.Ray;
 import primitives.Vector;
 
 import java.util.*;
+import java.util.stream.*;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
@@ -134,21 +135,26 @@ public class Camera {
         }
 
         int width = imageWriter.getNx(), height = imageWriter.getNy();
-
+        Pixel.initialize(height, width, 1);
         if(DoFActive) {
             this.DoFPoints = Point.generatePointsOnCircle(location, vUp, vRight, apertureRadius, gridDensity);
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
+            IntStream.range(0, height).parallel().forEach(i -> {
+                IntStream.range(0, width).parallel().forEach(j -> {
                     var focalPoint = constructRay(width, height, j, i).getPoint(focalLength);
                     imageWriter.writePixel(j, i, rayTracer.traceMultipleRays(Ray.constructRaysFromListOfPointsToPoint(focalPoint, DoFPoints)));
-                }
-            }
+                    Pixel.pixelDone();
+                    Pixel.printPixel();
+                });
+            });
         }else {
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
+
+            IntStream.range(0, height).parallel().forEach(i -> {
+                IntStream.range(0, width).parallel().forEach(j -> {
                     imageWriter.writePixel(j, i, rayTracer.traceRay(constructRay(width, height, j, i)));
-                }
-            }
+                    Pixel.pixelDone();
+                    Pixel.printPixel();
+                });
+            });
         }
         return this;
     }
