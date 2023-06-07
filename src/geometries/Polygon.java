@@ -95,7 +95,7 @@ public class Polygon extends Geometry {
         double sumZ = 0;
 
         Point minPoint = new Point(0, 0, 0);
-        Point maxPoint = new Point(0, 0, 0);
+        Point maxPoint = new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY);
         for (Point p : vertices) {
             minPoint = Point.createMinPoint(minPoint, p);
             maxPoint = Point.createMaxPoint(maxPoint, p);

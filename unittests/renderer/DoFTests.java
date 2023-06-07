@@ -44,7 +44,8 @@ public class DoFTests {
                 .setShininess(60)
                 .setkR(0.02)
         );
-        scene.geometries.add(plane);
+//        scene.geometries.add(plane);
+
 
 //        // Spheres
 //        int numSpheres = 3;
@@ -92,6 +93,7 @@ public class DoFTests {
 
         LightSource lightSource = new DirectionalLight(new Color(70, 172, 21 ),new Vector(-1,0,0) );
         scene.lights.add(lightSource);
+        scene.activateBVH();
 
         ImageWriter imageWriter = new ImageWriter("DoF", 1200, 1200);
         camera.setImageWriter(imageWriter)
@@ -99,6 +101,7 @@ public class DoFTests {
                 .renderImage()
                 .writeToImage();
     }
+
 
 
 }

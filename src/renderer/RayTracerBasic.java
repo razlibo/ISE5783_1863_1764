@@ -178,7 +178,7 @@ public class RayTracerBasic extends RayTracerBase {
      * @return the closest point
      */
     private GeoPoint findClosestIntersection(Ray ray) {
-        var intersections = scene.geometries.findGeoIntersections(ray);
+        var intersections = scene.getGeometries().findGeoIntersections(ray);
         return intersections == null ? null : ray.findClosestGeoPoint(intersections);
     }
 

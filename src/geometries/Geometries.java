@@ -53,7 +53,7 @@ public class Geometries extends Intersectable{
         for(Intersectable i:bodies){
             i.findMinMaxCenter();
             minAABB = Point.createMinPoint(minAABB, i.minAABB);
-            maxAABB = Point.createMinPoint(maxAABB, i.maxAABB);
+            maxAABB = Point.createMaxPoint(maxAABB, i.maxAABB);
         }
         this.centerAABB = new Point((maxAABB.getX() + minAABB.getX())/2,(maxAABB.getY() + minAABB.getY())/2,(maxAABB.getZ() + minAABB.getZ())/2 );
 
