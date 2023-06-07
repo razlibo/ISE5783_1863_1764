@@ -58,6 +58,9 @@ public class Plane extends Geometry {
     }
 
     @Override
+    public void findMinMaxCenter() {}
+
+    @Override
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDis) {
         if(ray.getP0().equals(this.p0)) return null;
         double nv = this.normal.dotProduct(ray.getDir());

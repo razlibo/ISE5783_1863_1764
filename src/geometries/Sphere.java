@@ -37,6 +37,12 @@ public class Sphere extends RadialGeometry {
     }
 
     @Override
+    public void findMinMaxCenter() {
+        this.centerAABB = center;
+        this.maxAABB = center.add(new Vector(radius,radius,radius));
+        this.minAABB = center.add(new Vector(-radius,-radius,-radius));
+    }
+    @Override
     public Vector getNormal(Point p) { return p.subtract(this.center).normalize(); }
 
     @Override

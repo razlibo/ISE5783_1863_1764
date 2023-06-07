@@ -51,6 +51,9 @@ public class Tube extends RadialGeometry {
 
 
     @Override
+    public void findMinMaxCenter() {}
+
+    @Override
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDis) {
         return null;
     }

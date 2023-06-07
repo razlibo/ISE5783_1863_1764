@@ -31,6 +31,8 @@ public abstract class Intersectable {
          */
         public Point point;
 
+
+
         /**
          Constructs a new GeoPoint object with the given Geometry object and Point object.
          @param geometry the Geometry object that was intersected
@@ -57,6 +59,32 @@ public abstract class Intersectable {
                     '}';
         }
     }
+
+    protected Point maxAABB = null;
+
+    protected Point minAABB = null;
+
+
+    public Point getMaxABBA() {
+        return maxAABB;
+    }
+
+    public Point getMinABBA() {
+        return minAABB;
+    }
+
+    public Point getCenterABBA() {
+        return centerAABB;
+    }
+
+    protected Point centerAABB = null;
+
+
+    /**
+     find and return the minimum and maximum points in the geometry
+     */
+
+    public abstract void findMinMaxCenter();
 
     public final List<GeoPoint> findGeoIntersections(Ray ray){
         return findGeoIntersectionsHelper(ray,Double.POSITIVE_INFINITY);

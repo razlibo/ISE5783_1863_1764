@@ -4,7 +4,6 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import static primitives.Util.alignZero;
@@ -90,6 +89,27 @@ public class Polygon extends Geometry {
     }
 
     @Override
+    public void findMinMaxCenter() {
+        double sumX = 0;
+        double sumY = 0;
+        double sumZ = 0;
+
+        Point minPoint = new Point(0, 0, 0);
+        Point maxPoint = new Point(0, 0, 0);
+        for (Point p : vertices) {
+            minPoint = Point.createMinPoint(minPoint, p);
+            maxPoint = Point.createMaxPoint(maxPoint, p);
+            sumX += p.getX();
+            sumY += p.getY();
+            sumZ += p.getZ();
+        }
+        minAABB = minPoint;
+        maxAABB = maxPoint;
+        // Create and return the center point
+        this.centerAABB = new Point(sumX / size, sumY / size, sumZ / size);
+    }
+
+    @Override
     public Vector getNormal(Point point) {
         return plane.getNormal();
     }
@@ -101,7 +121,7 @@ public class Polygon extends Geometry {
 
         List<GeoPoint> points = plane.findGeoIntersections(ray, maxDis);
 
-        if(points == null) return null;
+        if (points == null) return null;
 
         for (int i = 0; i < vectors.length; i++) {
             vectors[i] = this.vertices.get(i).subtract(ray.getP0());

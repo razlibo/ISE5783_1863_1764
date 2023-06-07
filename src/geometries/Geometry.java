@@ -52,9 +52,12 @@ public abstract class Geometry extends Intersectable{
         return this;
     }
 
+
     /**
      * @param p the point that we want to get the normal from
      * @return the normal vector
      */
     public abstract Vector getNormal(Point p);
+
+
 }

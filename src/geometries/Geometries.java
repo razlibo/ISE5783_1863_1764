@@ -38,6 +38,19 @@ public class Geometries extends Intersectable{
     }
 
     @Override
+    public void findMinMaxCenter() {
+        minAABB = new Point(0,0,0);
+        maxAABB = new Point(0,0,0);
+        for(Intersectable i:bodies){
+            i.findMinMaxCenter();
+            minAABB = Point.createMinPoint(minAABB, i.minAABB);
+            maxAABB = Point.createMinPoint(maxAABB, i.maxAABB);
+        }
+        this.centerAABB = new Point((maxAABB.getX() + minAABB.getX())/2,(maxAABB.getY() + minAABB.getY())/2,(maxAABB.getZ() + minAABB.getZ())/2 );
+
+    }
+
+    @Override
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDis) {
         LinkedList<GeoPoint> list = null;
         for (Intersectable body : bodies) {
