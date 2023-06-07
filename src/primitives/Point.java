@@ -130,4 +130,12 @@ public class Point {
         }
         return points;
     }
+
+    public static Point createMaxPoint(Point p1, Point p2){
+        return new Point(Math.max(p1.getX(), p2.getX()), Math.max(p1.getY(), p2.getY()), Math.max(p1.getZ(), p2.getZ()));
+    }
+
+    public static Point createMinPoint(Point p1, Point p2){
+        return new Point(Math.min(p1.getX(), p2.getX()), Math.min(p1.getY(), p2.getY()), Math.min(p1.getZ(), p2.getZ()));
+    }
 }

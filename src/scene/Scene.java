@@ -1,6 +1,7 @@
 package scene;
 
 import geometries.Geometries;
+import geometries.Intersectable;
 import lighting.AmbientLight;
 import lighting.LightSource;
 import primitives.Color;
@@ -12,6 +13,14 @@ import java.util.List;
  * A scene containing a name, background color, ambient light, and a collection of geometries.
  */
 public class Scene {
+    /**
+     * AABB tree root
+     */
+    AABB root = null;
+    /**
+     * BVH state
+     */
+    boolean BVHActive = false;
     /**
      * The lights in the scene.
      */
@@ -84,4 +93,20 @@ public class Scene {
         this.lights = lights;
         return this;
     }
+
+    /**
+     * Activate BVH
+     *
+     * @return This Scene object.
+     */
+    public Scene activateBVH(){
+        BVHActive = true;
+        root = new AABB(geometries).buildTree();
+        return this;
+    }
+
+    public Intersectable getGeometries(){
+        return BVHActive ? root : geometries;
+    }
+
 }

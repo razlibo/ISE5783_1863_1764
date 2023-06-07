@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Geometries extends Intersectable{
 
-    private LinkedList<Intersectable> bodies;
+    public LinkedList<Intersectable> bodies;
 
 
     /**
@@ -35,6 +35,15 @@ public class Geometries extends Intersectable{
         for (Intersectable geometry : geometries) {
             bodies.add(geometry);
         }
+    }
+
+    /***
+     * add geometries to te list
+     * @param geometries to add
+     */
+    public Geometries add(List<Intersectable> geometries){
+        bodies.addAll(geometries);
+        return this;
     }
 
     @Override
