@@ -54,7 +54,7 @@ public class AABB extends Intersectable {
 
         double xyzMini = Math.min(xyMini,Math.min(tzmin,tzmax));
         double xyzMax =  Math.max(xyMax,Math.max(tzmin,tzmax));
-        return xyzMax >= xyMini;
+        return xyzMax >= xyzMini && xyzMax <= maxDis;
     }
 
 
