@@ -32,28 +32,28 @@ public class AABB extends Intersectable {
         }
         this.geometries = geometries;
         findMinMaxCenter();
-        Point[] corners = new Point[8];
-
-        // Calculate the coordinates for each corner
-        corners[0] = new Point(geometries.getMinABBA().getX(), geometries.getMinABBA().getY(), geometries.getMinABBA().getZ());
-        corners[1] = new Point(geometries.getMaxABBA().getX(), geometries.getMinABBA().getY(), geometries.getMinABBA().getZ());
-        corners[2] = new Point(geometries.getMinABBA().getX(), geometries.getMaxABBA().getY(), geometries.getMinABBA().getZ());
-        corners[3] = new Point(geometries.getMaxABBA().getX(), geometries.getMaxABBA().getY(), geometries.getMinABBA().getZ());
-        corners[4] = new Point(geometries.getMinABBA().getX(), geometries.getMinABBA().getY(), geometries.getMaxABBA().getZ());
-        corners[5] = new Point(geometries.getMaxABBA().getX(), geometries.getMinABBA().getY(), geometries.getMaxABBA().getZ());
-        corners[6] = new Point(geometries.getMinABBA().getX(), geometries.getMaxABBA().getY(), geometries.getMaxABBA().getZ());
-        corners[7] = new Point(geometries.getMaxABBA().getX(), geometries.getMaxABBA().getY(), geometries.getMaxABBA().getZ());
-
-        polygons = new Polygon[6];
-
-        // Define the polygons using the corner points
-        // Each polygon is defined by four corners in a counterclockwise order
-        polygons[0] = new Polygon(corners[0], corners[1], corners[3], corners[2]);
-        polygons[1] = new Polygon(corners[1], corners[5], corners[7], corners[3]);
-        polygons[2] = new Polygon(corners[5], corners[4], corners[6], corners[7]);
-        polygons[3] = new Polygon(corners[4], corners[0], corners[2], corners[6]);
-        polygons[4] = new Polygon(corners[2], corners[3], corners[7], corners[6]);
-        polygons[5] = new Polygon(corners[4], corners[5], corners[1], corners[0]);
+//        Point[] corners = new Point[8];
+//
+//        // Calculate the coordinates for each corner
+//        corners[0] = new Point(geometries.getMinABBA().getX(), geometries.getMinABBA().getY(), geometries.getMinABBA().getZ());
+//        corners[1] = new Point(geometries.getMaxABBA().getX(), geometries.getMinABBA().getY(), geometries.getMinABBA().getZ());
+//        corners[2] = new Point(geometries.getMinABBA().getX(), geometries.getMaxABBA().getY(), geometries.getMinABBA().getZ());
+//        corners[3] = new Point(geometries.getMaxABBA().getX(), geometries.getMaxABBA().getY(), geometries.getMinABBA().getZ());
+//        corners[4] = new Point(geometries.getMinABBA().getX(), geometries.getMinABBA().getY(), geometries.getMaxABBA().getZ());
+//        corners[5] = new Point(geometries.getMaxABBA().getX(), geometries.getMinABBA().getY(), geometries.getMaxABBA().getZ());
+//        corners[6] = new Point(geometries.getMinABBA().getX(), geometries.getMaxABBA().getY(), geometries.getMaxABBA().getZ());
+//        corners[7] = new Point(geometries.getMaxABBA().getX(), geometries.getMaxABBA().getY(), geometries.getMaxABBA().getZ());
+//
+//        polygons = new Polygon[6];
+//
+//        // Define the polygons using the corner points
+//        // Each polygon is defined by four corners in a counterclockwise order
+//        polygons[0] = new Polygon(corners[0], corners[1], corners[3], corners[2]);
+//        polygons[1] = new Polygon(corners[1], corners[5], corners[7], corners[3]);
+//        polygons[2] = new Polygon(corners[5], corners[4], corners[6], corners[7]);
+//        polygons[3] = new Polygon(corners[4], corners[0], corners[2], corners[6]);
+//        polygons[4] = new Polygon(corners[2], corners[3], corners[7], corners[6]);
+//        polygons[5] = new Polygon(corners[4], corners[5], corners[1], corners[0]);
 
 
 
@@ -67,40 +67,37 @@ public class AABB extends Intersectable {
 
     public boolean intersect(Ray ray, double maxDis){
 
-        for(Polygon p:polygons){
-            var l = p.findGeoIntersections(ray, maxDis);
-            if(l != null) return true;
-        }
-        return false;
+//        for(Polygon p:polygons){
+//            var l = p.findGeoIntersections(ray, maxDis);
+//            if(l != null) return true;
+//        }
+//        return false;
+        var dir = ray.getDir();
+        var vP0 = ray.getP0();
+        var invdir = new Vector(1/dir.getX(),1/dir.getY(),1/dir.getZ());
+        int[] sign = {invdir.getX() < 0 ? 1 : 0,invdir.getY() < 0 ? 1 : 0, invdir.getZ() < 0 ? 1 : 0 };
+        Point[] bounds = {geometries.getMinABBA(),geometries.getMaxABBA()};
+        double tmin, tmax, tymin, tymax, tzmin, tzmax;
+        tmin = (bounds[sign[0]].getX() - vP0.getX()) * invdir.getX();
+        tmax = (bounds[1-sign[0]].getX() - vP0.getX()) * invdir.getX();
+        tymin = (bounds[sign[1]].getY() - vP0.getY()) * invdir.getY();
+        tymax = (bounds[1-sign[1]].getY() - vP0.getY()) * invdir.getY();
+        if ((tmin > tymax) || (tymin > tmax))
+            return false;
 
+        if (tymin > tmin)
+            tmin = tymin;
+        if (tymax < tmax)
+            tmax = tymax;
+        tzmin = (bounds[sign[2]].getZ() - vP0.getZ()) * invdir.getZ();
+        tzmax = (bounds[1-sign[2]].getZ() - vP0.getZ()) * invdir.getZ();
 
+        if ((tmin > tzmax) || (tzmin > tmax))
+            return false;
+        if (tzmax < tmax)
+            tmax = tzmax;
 
-
-//        var xPoint = ray.getP0().getX();
-//        var dir = ray.getDir();
-//
-//        var minPoint = geometries.getMinABBA();
-//        var maxPoint = geometries.getMaxABBA();
-//        double tmin = (minPoint.getX() - xPoint) * dir.getX();
-//        double tmax = (maxPoint.getX() - xPoint) * dir.getX();
-//
-//        double tMini = Math.min(tmin,tmax);
-//        double tMax = Math.max(tmin,tmax);
-//
-//        var yPoint = ray.getP0().getY();
-//        double tymin = (minPoint.getY() - yPoint) * dir.getY();
-//        double tymax = (maxPoint.getY() - yPoint) * dir.getY();
-//
-//        double xyMini = Math.min(tMini,Math.min(tymin,tymax));
-//        double xyMax =  Math.max(tMax,Math.max(tymin,tymax));
-//
-//        var zPoint = ray.getP0().getZ();
-//        double tzmin = (minPoint.getZ() - zPoint) * dir.getZ();
-//        double tzmax = (maxPoint.getZ() - zPoint) * dir.getZ();
-//
-//        double xyzMini = Math.min(xyMini,Math.min(tzmin,tzmax));
-//        double xyzMax =  Math.max(xyMax,Math.max(tzmin,tzmax));
-//        return xyzMax >= xyzMini && xyzMax <= maxDis;
+        return tmax <= maxDis;
     }
 
 
