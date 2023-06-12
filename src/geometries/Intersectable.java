@@ -58,6 +58,15 @@ public abstract class Intersectable {
         }
     }
 
+    public static class AABB{
+        Point min, max;
+
+        public AABB(Point min, Point max){
+            this.min = min;
+            this.max = max;
+        }
+    }
+
     public final List<GeoPoint> findGeoIntersections(Ray ray){
         return findGeoIntersectionsHelper(ray,Double.POSITIVE_INFINITY);
     }
