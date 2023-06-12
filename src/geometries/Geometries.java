@@ -146,7 +146,7 @@ public class Geometries extends Intersectable{
             if(i.bbox.isInfinite()){
                 list.get(2).add(i);
             }
-            if(func.apply(i) < pos){
+            else if(func.apply(i) < pos){
                 list.get(0).add(i);
             }else{
                 list.get(1).add(i);

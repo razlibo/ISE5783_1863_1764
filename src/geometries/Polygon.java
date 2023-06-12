@@ -90,7 +90,7 @@ public class Polygon extends Geometry {
             minBbox = Point.createMinPoint(minBbox, vertices[i]);
             maxBbox = Point.createMaxPoint(maxBbox, vertices[i]);
         }
-//        bbox = new AABB(minBbox, maxBbox);
+        bbox = new AABB(minBbox, maxBbox);
     }
 
     @Override
@@ -121,6 +121,8 @@ public class Polygon extends Geometry {
 
         return points.stream().map(gp -> new GeoPoint(this, gp.point)).toList();
     }
+
+
 
 //    @Override
 //    public boolean isIntersectAABB(AABB bbox) {
