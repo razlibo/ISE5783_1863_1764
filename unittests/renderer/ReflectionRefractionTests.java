@@ -323,7 +323,7 @@ public class ReflectionRefractionTests {
                .setkR(0.2)
        );
        polygon.setEmission(new Color(255, 255, 0));
-       scene.geometries.add(polygon);
+//       scene.geometries.add(polygon);
 
 
       // Add lights to the scene
@@ -332,7 +332,7 @@ public class ReflectionRefractionTests {
               new Point(-100, 100, 100),
               new Vector(1, -1, -1)).setkL(0.0004).setkQ(0.0001);
       scene.lights.add(spotLight);
-
+      scene.geometries.BuildBVH();
       // Render the scene
       ImageWriter imageWriter = new ImageWriter("anotherMultipleObjectTest", 600, 600);
       camera.setImageWriter(imageWriter)

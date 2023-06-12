@@ -77,6 +77,7 @@ public class Polygon extends Geometry {
         // the
         // polygon is convex ("kamur" in Hebrew).
         boolean positive = edge1.crossProduct(edge2).dotProduct(n) > 0;
+        Point maxBbox = new Point(Double.NEGATIVE_INFINITY), minBbox = new Point(Double.POSITIVE_INFINITY);
         for (var i = 1; i < vertices.length; ++i) {
             // Test that the point is in the same plane as calculated originally
             if (!isZero(vertices[i].subtract(vertices[0]).dotProduct(n)))
@@ -86,7 +87,10 @@ public class Polygon extends Geometry {
             edge2 = vertices[i].subtract(vertices[i - 1]);
             if (positive != (edge1.crossProduct(edge2).dotProduct(n) > 0))
                 throw new IllegalArgumentException("All vertices must be ordered and the polygon must be convex");
+            minBbox = Point.createMinPoint(minBbox, vertices[i]);
+            maxBbox = Point.createMaxPoint(maxBbox, vertices[i]);
         }
+//        bbox = new AABB(minBbox, maxBbox);
     }
 
     @Override

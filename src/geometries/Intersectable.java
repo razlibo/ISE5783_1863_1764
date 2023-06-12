@@ -63,52 +63,105 @@ public abstract class Intersectable {
     public static class AABB{
         Point min, max, center;
 
+        boolean isInfinite;
+
+        Polygon[] polygons;
+
         public boolean isInfinite(){
-            return min.equals(new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY))  || max.equals(new Point(Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY));
+            return isInfinite;
         }
 
         public AABB(Point min, Point max, Point center){
-            this.min = min;
+            this.min = min.add(new Vector(0.1,0.1,0.1));
             this.max = max;
             this.center = center;
         }
+
+        public AABB(Point min, Point max){
+            min = min.add(new Vector(0.1,0.1,0.1));
+            this.min = min;
+            this.max = max;
+            center = new Point((min.getX() + max.getX())/2, (min.getY() + max.getY())/2, (min.getZ() + max.getZ())/2);
+            Point[] corners = new Point[8];
+
+            if(min.getX() == Double.POSITIVE_INFINITY || min.getX() == Double.NEGATIVE_INFINITY) {
+                isInfinite = true;
+                return;
+            }
+            // Calculate the coordinates for each corner
+            corners[0] = new Point(min.getX(), min.getY(), min.getZ());
+            corners[1] = new Point(max.getX(), min.getY(), min.getZ());
+            corners[2] = new Point(min.getX(), max.getY(), min.getZ());
+            corners[3] = new Point(max.getX(), max.getY(), min.getZ());
+            corners[4] = new Point(min.getX(), min.getY(), max.getZ());
+            corners[5] = new Point(max.getX(), min.getY(), max.getZ());
+            corners[6] = new Point(min.getX(), max.getY(), max.getZ());
+            corners[7] = new Point(max.getX(), max.getY(), max.getZ());
+
+            polygons = new Polygon[6];
+
+            // Define the polygons using the corner points
+            // Each polygon is defined by four corners in a counterclockwise order
+            polygons[0] = new Polygon(corners[0], corners[1], corners[3], corners[2]);
+            polygons[1] = new Polygon(corners[1], corners[5], corners[7], corners[3]);
+            polygons[2] = new Polygon(corners[5], corners[4], corners[6], corners[7]);
+            polygons[3] = new Polygon(corners[4], corners[0], corners[2], corners[6]);
+            polygons[4] = new Polygon(corners[2], corners[3], corners[7], corners[6]);
+            polygons[5] = new Polygon(corners[4], corners[5], corners[1], corners[0]);
+        }
         public boolean intersect(Ray ray, double maxDis){
-
-//        for(Polygon p:polygons){
-//            var l = p.findGeoIntersections(ray, maxDis);
-//            if(l != null) return true;
-//        }
-//        return false;
-            var dir = ray.getDir();
-            var vP0 = ray.getP0();
-            var invdir = new Vector(1/dir.getX(),1/dir.getY(),1/dir.getZ());
-            int[] sign = {invdir.getX() < 0 ? 1 : 0,invdir.getY() < 0 ? 1 : 0, invdir.getZ() < 0 ? 1 : 0 };
-            Point[] bounds = {min,max};
-            double tmin, tmax, tymin, tymax, tzmin, tzmax;
-            tmin = (bounds[sign[0]].getX() - vP0.getX()) * invdir.getX();
-            tmax = (bounds[1-sign[0]].getX() - vP0.getX()) * invdir.getX();
-            tymin = (bounds[sign[1]].getY() - vP0.getY()) * invdir.getY();
-            tymax = (bounds[1-sign[1]].getY() - vP0.getY()) * invdir.getY();
-            if ((tmin > tymax) || (tymin > tmax))
-                return false;
-
-            if (tymin > tmin)
-                tmin = tymin;
-            if (tymax < tmax)
-                tmax = tymax;
-            tzmin = (bounds[sign[2]].getZ() - vP0.getZ()) * invdir.getZ();
-            tzmax = (bounds[1-sign[2]].getZ() - vP0.getZ()) * invdir.getZ();
-
-            if ((tmin > tzmax) || (tzmin > tmax))
-                return false;
-            if (tzmax < tmax)
-                tmax = tzmax;
-
-            return tmax <= maxDis;
+        if (isInfinite) return true;
+        for(Polygon p:polygons){
+            var l = p.findGeoIntersections(ray, maxDis);
+            if(l != null) return true;
+        }
+        return false;
+//            var dir = ray.getDir();
+//            var vP0 = ray.getP0();
+//            var invdir = new Vector(1/dir.getX(),1/dir.getY(),1/dir.getZ());
+//            int[] sign = {invdir.getX() < 0 ? 1 : 0,invdir.getY() < 0 ? 1 : 0, invdir.getZ() < 0 ? 1 : 0 };
+//            Point[] bounds = {min,max};
+//            double tmin, tmax, tymin, tymax, tzmin, tzmax;
+//            tmin = (bounds[sign[0]].getX() - vP0.getX()) * invdir.getX();
+//            tmax = (bounds[1-sign[0]].getX() - vP0.getX()) * invdir.getX();
+//            tymin = (bounds[sign[1]].getY() - vP0.getY()) * invdir.getY();
+//            tymax = (bounds[1-sign[1]].getY() - vP0.getY()) * invdir.getY();
+//            if ((tmin > tymax) || (tymin > tmax))
+//                return false;
+//
+//            if (tymin > tmin)
+//                tmin = tymin;
+//            if (tymax < tmax)
+//                tmax = tymax;
+//            tzmin = (bounds[sign[2]].getZ() - vP0.getZ()) * invdir.getZ();
+//            tzmax = (bounds[1-sign[2]].getZ() - vP0.getZ()) * invdir.getZ();
+//
+//            if ((tmin > tzmax) || (tzmin > tmax))
+//                return false;
+//            if (tzmax < tmax)
+//                tmax = tzmax;
+//
+//            return tmax < maxDis;
         }
         public double AABBArea(){
             Point extent = max.subtract(min);
             return extent.getX() * extent.getY() + extent.getY() * extent.getZ() + extent.getZ() * extent.getX();
+        }
+
+        public Point getMin() {
+            return min;
+        }
+
+        public Point getMax() {
+            return max;
+        }
+
+        public Point getCenter() {
+            return center;
+        }
+        public AABB setInfinity(boolean isInfinite){
+            this.isInfinite = isInfinite;
+            return this;
         }
     }
 
@@ -145,4 +198,8 @@ public abstract class Intersectable {
     }
 
     AABB bbox;
+
+    public AABB getBbox() {
+        return bbox;
+    }
 }

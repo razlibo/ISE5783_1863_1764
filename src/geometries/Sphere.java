@@ -1,5 +1,6 @@
 package geometries;
 
+import primitives.Double3;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -25,6 +26,7 @@ public class Sphere extends RadialGeometry {
     public Sphere(double radius, Point center) {
         super(radius);
         this.center = center;
+        bbox = new AABB(center.add(new Vector(new Double3(radius))), center.add(new Vector(new Double3(-radius))));
     }
 
     /**

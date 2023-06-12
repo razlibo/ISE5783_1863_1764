@@ -23,6 +23,12 @@ public class Triangle extends Polygon {
      */
     public Triangle(Point p1, Point p2, Point p3) {
         super(p1, p2, p3);
+        Point maxBbox = new Point(Double.NEGATIVE_INFINITY), minBbox = new Point(Double.POSITIVE_INFINITY);
+        for (var i = 1; i < vertices.size(); ++i) {
+            minBbox = Point.createMinPoint(minBbox, vertices.get(i));
+            maxBbox = Point.createMaxPoint(maxBbox, vertices.get(i));
+        }
+        bbox = new AABB(minBbox, maxBbox);
     }
 
     @Override
