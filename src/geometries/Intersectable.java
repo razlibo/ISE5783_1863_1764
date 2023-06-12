@@ -65,8 +65,6 @@ public abstract class Intersectable {
 
         boolean isInfinite;
 
-        Polygon[] polygons;
-
         private static final double DELTA = 0.1;
 
         public boolean isInfinite(){
@@ -82,13 +80,15 @@ public abstract class Intersectable {
         }
 
         public AABB(Point min, Point max){
-            min = min.add(new Vector(0.1,0.1,0.1));
+            min = min.add(new Vector(-DELTA,-DELTA,-DELTA));
+            max = max.add(new Vector(DELTA,DELTA,DELTA));
             this.min = min;
             this.max = max;
             center = new Point((min.getX() + max.getX())/2, (min.getY() + max.getY())/2, (min.getZ() + max.getZ())/2);
 
         }
         public boolean intersect(Ray ray, double maxDis){
+            if (isInfinite) return true;
             var dir = ray.getDir();
             var vP0 = ray.getP0();
             var invdir = new Vector(1/dir.getX(),1/dir.getY(),1/dir.getZ());

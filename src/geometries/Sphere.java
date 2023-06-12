@@ -26,7 +26,7 @@ public class Sphere extends RadialGeometry {
     public Sphere(double radius, Point center) {
         super(radius);
         this.center = center;
-        bbox = new AABB(center.add(new Vector(new Double3(radius))), center.add(new Vector(new Double3(-radius))));
+        bbox = new AABB(center.add(new Vector(new Double3(-radius))), center.add(new Vector(new Double3(radius))), center);
     }
 
     /**

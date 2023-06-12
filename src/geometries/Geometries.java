@@ -53,27 +53,18 @@ public class Geometries extends Intersectable{
     public Geometries add(List<Intersectable> geometries){
         if (geometries.size() == 0) return this;
         Point maxBbox = bbox.getMax(), minBbox = bbox.getMin();
+        boolean inf = bbox.isInfinite();
         for (Intersectable geometry : geometries) {
             bodies.add(geometry);
+            if (geometry.bbox.isInfinite) {
+                inf = true;
+            }
             maxBbox = Point.createMaxPoint(maxBbox, geometry.bbox.getMax());
             minBbox = Point.createMinPoint(minBbox, geometry.bbox.getMin());
         }
-        bbox = new AABB(minBbox, maxBbox);
+        bbox = new AABB(minBbox, maxBbox).setInfinity(inf);
         return this;
     }
-
-//    @Override
-//    public void findMinMaxCenter() {
-//        minAABB = new Point(0,0,0);
-//        maxAABB = new Point(0,0,0);
-//        for(Intersectable i:bodies){
-//            i.findMinMaxCenter();
-//            minAABB = Point.createMinPoint(minAABB, i.minAABB);
-//            maxAABB = Point.createMaxPoint(maxAABB, i.maxAABB);
-//        }
-//        this.centerAABB = new Point((maxAABB.getX() + minAABB.getX())/2,(maxAABB.getY() + minAABB.getY())/2,(maxAABB.getZ() + minAABB.getZ())/2 );
-//
-//    }
 
     @Override
     protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDis) {

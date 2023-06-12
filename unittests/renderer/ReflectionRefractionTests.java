@@ -323,7 +323,7 @@ public class ReflectionRefractionTests {
                .setkR(0.2)
        );
        polygon.setEmission(new Color(255, 255, 0));
-//       scene.geometries.add(polygon);
+       scene.geometries.add(polygon);
 
 
       // Add lights to the scene

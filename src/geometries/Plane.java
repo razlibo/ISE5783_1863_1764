@@ -24,7 +24,7 @@ public class Plane extends Geometry {
     public Plane(Point p1, Point p2, Point p3) {
         p0 = p1;
         normal = p1.subtract(p2).crossProduct(p2.subtract(p3)).normalize();
-        bbox = new AABB(new Point(Double.NEGATIVE_INFINITY), new Point(Double.POSITIVE_INFINITY), new Point(0));
+        bbox = new AABB(new Point(Double.NEGATIVE_INFINITY), new Point(Double.POSITIVE_INFINITY), new Point(0)).setInfinity(true);
     }
 
     /**
