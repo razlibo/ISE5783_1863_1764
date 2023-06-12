@@ -44,8 +44,8 @@ public class Triangle extends Polygon {
         return null;
     }
 
-    @Override
-    public boolean isIntersectAABB(AABB bbox) {
-        return super.isIntersectAABB(bbox);
-    }
+//    @Override
+//    public boolean isIntersectAABB(AABB bbox) {
+//        return super.isIntersectAABB(bbox);
+//    }
 }

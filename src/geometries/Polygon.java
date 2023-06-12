@@ -118,63 +118,63 @@ public class Polygon extends Geometry {
         return points.stream().map(gp -> new GeoPoint(this, gp.point)).toList();
     }
 
-    @Override
-    public boolean isIntersectAABB(AABB bbox) {
-        if (axisSeparation(bbox.min.getD1(), bbox.min.getD2(), bbox.min.getD3(), bbox.min.getD1(), bbox.max.getD2(), bbox.max.getD3()))
-            return false;
-        if (axisSeparation(bbox.min.getD1(), bbox.max.getD2(), bbox.min.getD3(), bbox.max.getD1(), bbox.max.getD2(), bbox.max.getD3()))
-            return false;
-        if (axisSeparation(bbox.max.getD1(), bbox.max.getD2(), bbox.max.getD3(), bbox.max.getD1(), bbox.min.getD2(), bbox.min.getD3()))
-            return false;
-        if (axisSeparation(bbox.max.getD1(), bbox.min.getD2(), bbox.max.getD3(), bbox.min.getD1(), bbox.min.getD2(), bbox.min.getD3()))
-            return false;
-        if (axisSeparation(bbox.min.getD1(), bbox.min.getD2(), bbox.min.getD3(), bbox.min.getD1(), bbox.min.getD2(), bbox.max.getD3()))
-            return false;
-        if (axisSeparation(bbox.min.getD1(), bbox.max.getD2(), bbox.min.getD3(), bbox.min.getD1(), bbox.max.getD2(), bbox.max.getD3()))
-            return false;
-        if (axisSeparation(bbox.max.getD1(), bbox.max.getD2(), bbox.min.getD3(), bbox.max.getD1(), bbox.max.getD2(), bbox.max.getD3()))
-            return false;
-        if (axisSeparation(bbox.max.getD1(), bbox.min.getD2(), bbox.min.getD3(), bbox.max.getD1(), bbox.min.getD2(), bbox.max.getD3()))
-            return false;
-
-        // Test polygon edges
-        for (int i = 0; i < this.vertices.size(); i++) {
-            Point p1 = this.vertices.get(i);
-            Point p2 = this.vertices.get((i + 1) % this.vertices.size());
-            if (axisSeparation(p1.getX(), p1.getY(), p1.getZ(), p2.getX(), p2.getY(), p2.getZ()))
-                return false;
-        }
-
-        return true; // Intersection detected
-    }
-
-
-    // Helper function to check axis separation
-    private boolean axisSeparation(double x1, double y1, double z1, double x2, double y2, double z2) {
-        double axisX = y1 * z2 - z1 * y2;
-        double axisY = z1 * x2 - x1 * z2;
-        double axisZ = x1 * y2 - y1 * x2;
-
-        double minA = Double.POSITIVE_INFINITY;
-        double maxA = Double.NEGATIVE_INFINITY;
-        double minB = Double.POSITIVE_INFINITY;
-        double maxB = Double.NEGATIVE_INFINITY;
-
-        for (Point p : this.vertices) {
-            double projected = axisX * p.getX() + axisY * p.getY() + axisZ * p.getZ();
-            minA = Math.min(minA, projected);
-            maxA = Math.max(maxA, projected);
-        }
-
-        double projected = axisX * x1 + axisY * y1 + axisZ * z1;
-        minB = Math.min(minB, projected);
-        maxB = Math.max(maxB, projected);
-
-        projected = axisX * x2 + axisY * y2 + axisZ * z2;
-        minB = Math.min(minB, projected);
-        maxB = Math.max(maxB, projected);
-
-        return maxA < minB || maxB < minA;
-    }
+//    @Override
+//    public boolean isIntersectAABB(AABB bbox) {
+//        if (axisSeparation(bbox.min.getD1(), bbox.min.getD2(), bbox.min.getD3(), bbox.min.getD1(), bbox.max.getD2(), bbox.max.getD3()))
+//            return false;
+//        if (axisSeparation(bbox.min.getD1(), bbox.max.getD2(), bbox.min.getD3(), bbox.max.getD1(), bbox.max.getD2(), bbox.max.getD3()))
+//            return false;
+//        if (axisSeparation(bbox.max.getD1(), bbox.max.getD2(), bbox.max.getD3(), bbox.max.getD1(), bbox.min.getD2(), bbox.min.getD3()))
+//            return false;
+//        if (axisSeparation(bbox.max.getD1(), bbox.min.getD2(), bbox.max.getD3(), bbox.min.getD1(), bbox.min.getD2(), bbox.min.getD3()))
+//            return false;
+//        if (axisSeparation(bbox.min.getD1(), bbox.min.getD2(), bbox.min.getD3(), bbox.min.getD1(), bbox.min.getD2(), bbox.max.getD3()))
+//            return false;
+//        if (axisSeparation(bbox.min.getD1(), bbox.max.getD2(), bbox.min.getD3(), bbox.min.getD1(), bbox.max.getD2(), bbox.max.getD3()))
+//            return false;
+//        if (axisSeparation(bbox.max.getD1(), bbox.max.getD2(), bbox.min.getD3(), bbox.max.getD1(), bbox.max.getD2(), bbox.max.getD3()))
+//            return false;
+//        if (axisSeparation(bbox.max.getD1(), bbox.min.getD2(), bbox.min.getD3(), bbox.max.getD1(), bbox.min.getD2(), bbox.max.getD3()))
+//            return false;
+//
+//        // Test polygon edges
+//        for (int i = 0; i < this.vertices.size(); i++) {
+//            Point p1 = this.vertices.get(i);
+//            Point p2 = this.vertices.get((i + 1) % this.vertices.size());
+//            if (axisSeparation(p1.getX(), p1.getY(), p1.getZ(), p2.getX(), p2.getY(), p2.getZ()))
+//                return false;
+//        }
+//
+//        return true; // Intersection detected
+//    }
+//
+//
+//    // Helper function to check axis separation
+//    private boolean axisSeparation(double x1, double y1, double z1, double x2, double y2, double z2) {
+//        double axisX = y1 * z2 - z1 * y2;
+//        double axisY = z1 * x2 - x1 * z2;
+//        double axisZ = x1 * y2 - y1 * x2;
+//
+//        double minA = Double.POSITIVE_INFINITY;
+//        double maxA = Double.NEGATIVE_INFINITY;
+//        double minB = Double.POSITIVE_INFINITY;
+//        double maxB = Double.NEGATIVE_INFINITY;
+//
+//        for (Point p : this.vertices) {
+//            double projected = axisX * p.getX() + axisY * p.getY() + axisZ * p.getZ();
+//            minA = Math.min(minA, projected);
+//            maxA = Math.max(maxA, projected);
+//        }
+//
+//        double projected = axisX * x1 + axisY * y1 + axisZ * z1;
+//        minB = Math.min(minB, projected);
+//        maxB = Math.max(maxB, projected);
+//
+//        projected = axisX * x2 + axisY * y2 + axisZ * z2;
+//        minB = Math.min(minB, projected);
+//        maxB = Math.max(maxB, projected);
+//
+//        return maxA < minB || maxB < minA;
+//    }
 
 }

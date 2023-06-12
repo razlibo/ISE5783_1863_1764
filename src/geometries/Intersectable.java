@@ -61,11 +61,16 @@ public abstract class Intersectable {
     }
 
     public static class AABB{
-        Double3 min, max;
+        Point min, max, center;
 
-        public AABB(Double3 min, Double3 max){
+        public boolean isInfinite(){
+            return min.equals(new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY))  || max.equals(new Point(Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY));
+        }
+
+        public AABB(Point min, Point max, Point center){
             this.min = min;
             this.max = max;
+            this.center = center;
         }
         public boolean intersect(Ray ray, double maxDis){
 
@@ -78,7 +83,7 @@ public abstract class Intersectable {
             var vP0 = ray.getP0();
             var invdir = new Vector(1/dir.getX(),1/dir.getY(),1/dir.getZ());
             int[] sign = {invdir.getX() < 0 ? 1 : 0,invdir.getY() < 0 ? 1 : 0, invdir.getZ() < 0 ? 1 : 0 };
-            Point[] bounds = {new Point(min),new Point(max)};
+            Point[] bounds = {min,max};
             double tmin, tmax, tymin, tymax, tzmin, tzmax;
             tmin = (bounds[sign[0]].getX() - vP0.getX()) * invdir.getX();
             tmax = (bounds[1-sign[0]].getX() - vP0.getX()) * invdir.getX();
@@ -102,7 +107,7 @@ public abstract class Intersectable {
             return tmax <= maxDis;
         }
         public double AABBArea(){
-            Point extent = new Point(max.subtract(min));
+            Point extent = max.subtract(min);
             return extent.getX() * extent.getY() + extent.getY() * extent.getZ() + extent.getZ() * extent.getX();
         }
     }
@@ -138,5 +143,6 @@ public abstract class Intersectable {
         var geoList = findGeoIntersections(ray);
         return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
     }
-    public abstract boolean isIntersectAABB(AABB bbox);
+
+    AABB bbox;
 }
