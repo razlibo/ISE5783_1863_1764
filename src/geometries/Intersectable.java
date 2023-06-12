@@ -1,7 +1,9 @@
 package geometries;
 
+import primitives.Double3;
 import primitives.Point;
 import primitives.Ray;
+import primitives.Vector;
 
 import java.util.List;
 
@@ -59,11 +61,49 @@ public abstract class Intersectable {
     }
 
     public static class AABB{
-        Point min, max;
+        Double3 min, max;
 
-        public AABB(Point min, Point max){
+        public AABB(Double3 min, Double3 max){
             this.min = min;
             this.max = max;
+        }
+        public boolean intersect(Ray ray, double maxDis){
+
+//        for(Polygon p:polygons){
+//            var l = p.findGeoIntersections(ray, maxDis);
+//            if(l != null) return true;
+//        }
+//        return false;
+            var dir = ray.getDir();
+            var vP0 = ray.getP0();
+            var invdir = new Vector(1/dir.getX(),1/dir.getY(),1/dir.getZ());
+            int[] sign = {invdir.getX() < 0 ? 1 : 0,invdir.getY() < 0 ? 1 : 0, invdir.getZ() < 0 ? 1 : 0 };
+            Point[] bounds = {new Point(min),new Point(max)};
+            double tmin, tmax, tymin, tymax, tzmin, tzmax;
+            tmin = (bounds[sign[0]].getX() - vP0.getX()) * invdir.getX();
+            tmax = (bounds[1-sign[0]].getX() - vP0.getX()) * invdir.getX();
+            tymin = (bounds[sign[1]].getY() - vP0.getY()) * invdir.getY();
+            tymax = (bounds[1-sign[1]].getY() - vP0.getY()) * invdir.getY();
+            if ((tmin > tymax) || (tymin > tmax))
+                return false;
+
+            if (tymin > tmin)
+                tmin = tymin;
+            if (tymax < tmax)
+                tmax = tymax;
+            tzmin = (bounds[sign[2]].getZ() - vP0.getZ()) * invdir.getZ();
+            tzmax = (bounds[1-sign[2]].getZ() - vP0.getZ()) * invdir.getZ();
+
+            if ((tmin > tzmax) || (tzmin > tmax))
+                return false;
+            if (tzmax < tmax)
+                tmax = tzmax;
+
+            return tmax <= maxDis;
+        }
+        public double AABBArea(){
+            Point extent = new Point(max.subtract(min));
+            return extent.getX() * extent.getY() + extent.getY() * extent.getZ() + extent.getZ() * extent.getX();
         }
     }
 
@@ -98,4 +138,5 @@ public abstract class Intersectable {
         var geoList = findGeoIntersections(ray);
         return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
     }
+    public abstract boolean isIntersectAABB(AABB bbox);
 }

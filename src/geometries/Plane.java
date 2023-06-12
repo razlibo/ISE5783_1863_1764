@@ -1,5 +1,6 @@
 package geometries;
 
+import primitives.Double3;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -70,5 +71,15 @@ public class Plane extends Geometry {
             geoPoints = List.of(new GeoPoint(this, ray.getPoint(t)));
         }
         return geoPoints;
+    }
+
+    @Override
+    public boolean isIntersectAABB(AABB bbox) {
+        Double3 c = bbox.max.add(bbox.min).scale(0.5);
+        Double3 e = bbox.max.subtract(c);
+        double r = e.getD1()*Math.abs(this.normal.getX()) + e.getD2()*Math.abs(this.normal.getY()) +e.getD3()*Math.abs(this.normal.getZ());
+        double s = this.normal.dotProduct(new Vector(c)) - this.normal.dotProduct(new Vector(p0.getX(), p0.getY(), p0.getZ()));
+
+        return Math.abs( s ) <= r;
     }
 }

@@ -158,4 +158,16 @@ public class Double3 {
     public boolean lowerThan(Double3 other) {
         return d1 < other.d1 && d2 < other.d2 && d3 < other.d3;
     }
+
+    public double getD1() {
+        return d1;
+    }
+
+    public double getD2() {
+        return d2;
+    }
+
+    public double getD3() {
+        return d3;
+    }
 }
