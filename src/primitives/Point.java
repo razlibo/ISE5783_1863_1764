@@ -39,8 +39,12 @@ public class Point {
         this.xyz = new Double3(x, y, z);
     }
 
+    /**
+     * Constructs a Point with the same value for all three coordinates.
+     * @param xyz The value for all three coordinates.
+     */
     public Point(double xyz){
-        this(xyz,xyz,xyz);
+        this(xyz, xyz, xyz);
     }
 
     @Override
@@ -134,10 +138,22 @@ public class Point {
         }
         return points;
     }
+    /**
+     * Creates a Point with the maximum coordinates from two input Points.
+     * @param p1 The first Point.
+     * @param p2 The second Point.
+     * @return A new Point with the maximum coordinates from p1 and p2.
+     */
     public static Point createMaxPoint(Point p1, Point p2){
         return new Point(Math.max(p1.getX(), p2.getX()), Math.max(p1.getY(), p2.getY()), Math.max(p1.getZ(), p2.getZ()));
     }
 
+    /**
+     * Creates a Point with the minimum coordinates from two input Points.
+     * @param p1 The first Point.
+     * @param p2 The second Point.
+     * @return A new Point with the minimum coordinates from p1 and p2.
+     */
     public static Point createMinPoint(Point p1, Point p2){
         return new Point(Math.min(p1.getX(), p2.getX()), Math.min(p1.getY(), p2.getY()), Math.min(p1.getZ(), p2.getZ()));
     }

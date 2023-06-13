@@ -13,18 +13,12 @@ public class Geometries extends Intersectable{
 
     public LinkedList<Intersectable> bodies;
 
-    static List<Function<Intersectable, Double>> axes = null;
+    static List<Function<Intersectable, Double>> axes = new ArrayList<>(Arrays.asList((x) -> x.bbox.center.getX(), (x) -> x.bbox.center.getY(), (x) -> x.bbox.center.getZ()));
 
     /**
      * empty constructor for Geometries
      */
     public Geometries(){
-        if (axes == null) {
-            axes = new ArrayList<>();
-            axes.add((x) -> x.bbox.center.getX());
-            axes.add((x) -> x.bbox.center.getY());
-            axes.add((x) -> x.bbox.center.getZ());
-        }
         bodies = new LinkedList<>();
         bbox = new AABB(new Point(Double.POSITIVE_INFINITY), new Point(Double.NEGATIVE_INFINITY));
     }
@@ -80,18 +74,28 @@ public class Geometries extends Intersectable{
         return list;
     }
 
+
+    /**
+     * Builds a Bounding Volume Hierarchy (BVH) for the geometries.
+     * @return The root node of the BVH.
+     */
     public Geometries BuildBVH(){
         if (bodies.size() <= 2) return this;
         double[] arr = decideHowToSplitBySAH();
         List<List<Intersectable>> split = splitByAxis(axes.get((int) arr[0]), arr[1]);
         bodies = new LinkedList<>();
         add(new Geometries().add(split.get(0)).BuildBVH(), new Geometries().add(split.get(1)).BuildBVH());
-        add(split.get(2));
+        if(split.size() == 3)add(split.get(2));
 
         return this;
-
     }
 
+    /**
+     * Evaluates the Surface Area Heuristic (SAH) cost for a given splitting position.
+     * @param func The function to evaluate for each intersectable.
+     * @param pos The splitting position.
+     * @return The SAH cost for the given splitting position.
+     */
     double evaluateSAH(Function<Intersectable, Double> func, double pos){
         Geometries left = new Geometries(), right = new Geometries();
         for(Intersectable i:bodies){
@@ -108,9 +112,11 @@ public class Geometries extends Intersectable{
         return cost > 0 ? cost : Double.POSITIVE_INFINITY;
     }
 
+    /**
+     * Decides the best axis and position to split the geometries using the Surface Area Heuristic (SAH).
+     * @return An array containing the best axis and position to split.
+     */
     double[] decideHowToSplitBySAH(){
-
-
         int bestAxis = -1;
         double bestPos = 0, bestCost = Double.POSITIVE_INFINITY;
         for( int axis = 0; axis < 3; axis++ ){
@@ -127,14 +133,18 @@ public class Geometries extends Intersectable{
         return new double[]{bestAxis, bestPos};
     }
 
+    /**
+     * Splits the geometries into three lists based on a given splitting function and position.
+     * @param func The function to determine the splitting position for each intersectable.
+     * @param pos The splitting position.
+     * @return A list containing three lists of intersectables: left, right, and infinite.
+     */
     List<List<Intersectable>> splitByAxis(Function<Intersectable, Double> func, double pos){
-        List<List<Intersectable>> list = new ArrayList<>();
-        list.add(new ArrayList<>());
-        list.add(new ArrayList<>());
-        list.add(new ArrayList<>());
+        List<List<Intersectable>> list = new ArrayList<>(Arrays.asList(new ArrayList<>(),new ArrayList<>()));
 
         for(Intersectable i:bodies){
             if(i.bbox.isInfinite()){
+                if(list.size() == 2) list.add(new ArrayList<>());
                 list.get(2).add(i);
             }
             else if(func.apply(i) < pos){

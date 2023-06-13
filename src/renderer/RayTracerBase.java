@@ -34,6 +34,11 @@ public abstract class RayTracerBase {
     public abstract Color traceRay(Ray ray);
 
 
+    /**
+     * Traces multiple rays and calculates the average color of the resulting intersections.
+     * @param rayList The list of rays to trace.
+     * @return The average color of the intersections.
+     */
     public Color traceMultipleRays(List<Ray> rayList) {
         int size = rayList.size();
         Color avgColor = Color.BLACK;
