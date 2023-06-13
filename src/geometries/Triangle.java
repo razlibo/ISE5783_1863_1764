@@ -22,32 +22,9 @@ public class Triangle extends Polygon {
      * @param p3 third point
      */
 
-    /*
-        @Override
-    public void findMinMaxCenter() {
-
-    }
-
-     */
     public Triangle(Point p1, Point p2, Point p3) {
         super(p1, p2, p3);
-        double sumX = 0;
-        double sumY = 0;
-        double sumZ = 0;
 
-        Point minPoint = new Point(0, 0, 0);
-        Point maxPoint = new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY);
-        for (Point p : vertices) {
-            minPoint = Point.createMinPoint(minPoint, p);
-            maxPoint = Point.createMaxPoint(maxPoint, p);
-            sumX += p.getX();
-            sumY += p.getY();
-            sumZ += p.getZ();
-        }
-
-        // Create the center point
-        var centerAABB = new Point(sumX / 3, sumY / 3, sumZ / 3);
-        bbox = new AABB(minPoint, maxPoint, centerAABB);
     }
 
     @Override
@@ -69,8 +46,4 @@ public class Triangle extends Polygon {
         return null;
     }
 
-//    @Override
-//    public boolean isIntersectAABB(AABB bbox) {
-//        return super.isIntersectAABB(bbox);
-//    }
 }

@@ -33,6 +33,7 @@ public abstract class RayTracerBase {
      */
     public abstract Color traceRay(Ray ray);
 
+
     public Color traceMultipleRays(List<Ray> rayList) {
         int size = rayList.size();
         Color avgColor = Color.BLACK;

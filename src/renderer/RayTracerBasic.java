@@ -46,6 +46,30 @@ public class RayTracerBasic extends RayTracerBase {
         super(scene);
     }
 
+    /**
+     * construct the refracted ray of given ray and point
+     *
+     * @param gp the point
+     * @param v  the ray
+     * @param n  the normal
+     * @return the refracted ray
+     */
+    public static Ray constructRefractedRay(GeoPoint gp, Vector v, Vector n) {
+        return new Ray(gp.point, v, n);
+    }
+
+    /**
+     * construct the reflected ray of given ray and point
+     *
+     * @param gp the point
+     * @param v  the ray
+     * @param n  the normal
+     * @return the reflected ray
+     */
+    public static Ray constructReflectedRay(GeoPoint gp, Vector v, Vector n) {
+        return new Ray(gp.point, v.subtract(n.scale(2 * alignZero(n.dotProduct(v)))), n);
+    }
+
     @Override
     public Color traceRay(Ray ray) {
         GeoPoint closestPoint = findClosestIntersection(ray);
@@ -55,6 +79,7 @@ public class RayTracerBasic extends RayTracerBase {
 
     /**
      * Calculates the color at the given intersection point with the provided ray.
+     *
      * @param gp  the intersection point
      * @param ray the ray
      * @return the calculated color
@@ -110,9 +135,10 @@ public class RayTracerBasic extends RayTracerBase {
 
     /**
      * Calculating the amount of shade in given point
-     * @param l the vector from the light
-     * @param n the normal
-     * @param gp the GeoPoint
+     *
+     * @param l     the vector from the light
+     * @param n     the normal
+     * @param gp    the GeoPoint
      * @param light the light source
      * @return amount of light that come to that point
      */
@@ -132,10 +158,11 @@ public class RayTracerBasic extends RayTracerBase {
 
     /**
      * Calculate the reflection and refracted color on given point and ray
-     * @param gp the point
-     * @param ray the ray
+     *
+     * @param gp    the point
+     * @param ray   the ray
      * @param level recursion level
-     * @param k amount of color of that colors to calculate
+     * @param k     amount of color of that colors to calculate
      * @return the color
      */
     private Color calcGlobalEffects(GeoPoint gp, Ray ray,
@@ -149,19 +176,21 @@ public class RayTracerBasic extends RayTracerBase {
         if (!kkr.lowerThan(MIN_CALC_COLOR_K)) {
             color = color.add(calcGlobalEffect(reflectedRay, level - 1, kr, kkr)).scale(kr);
         }
-        Double3 kt = material.kT, kkt = k .product(kt);
+        Double3 kt = material.kT, kkt = k.product(kt);
         Ray refractedRay = constructRefractedRay(gp, v, n);
         if (!kkt.lowerThan(MIN_CALC_COLOR_K)) {
             color = color.add(calcGlobalEffect(refractedRay, level - 1, kt, kkt)).scale(kt);
         }
-        return color;    }
+        return color;
+    }
 
     /**
      * Calculate the reflection or refracted color on given point and ray
-     * @param ray the ray
+     *
+     * @param ray   the ray
      * @param level recursion level
-     * @param k amount of color of that colors to calculate
-     * @param kx the kr/kt
+     * @param k     amount of color of that colors to calculate
+     * @param kx    the kr/kt
      * @return the color
      */
     private Color calcGlobalEffect(Ray ray, int level, Double3 k, Double3 kx) {
@@ -174,6 +203,7 @@ public class RayTracerBasic extends RayTracerBase {
 
     /**
      * Find the closest intersection point in given ray
+     *
      * @param ray the ray
      * @return the closest point
      */
@@ -193,7 +223,6 @@ public class RayTracerBasic extends RayTracerBase {
         return material.kD.scale(Math.abs(nl));
     }
 
-
     /**
      * Calculates the specular component of the color of a point on a surface
      *
@@ -208,29 +237,6 @@ public class RayTracerBasic extends RayTracerBase {
         var r = n.scale(2 * nl).subtract(l);
         return material.kS.scale(Math.pow(Math.max(0, v.dotProduct(r)), material.nShininess));
     }
-
-    /**
-     * construct the refracted ray of given ray and point
-     * @param gp the point
-     * @param v the ray
-     * @param n the normal
-     * @return the refracted ray
-     */
-    public static Ray constructRefractedRay(GeoPoint gp, Vector v, Vector n) {
-        return new Ray(gp.point, v, n);
-    }
-    /**
-     * construct the reflected ray of given ray and point
-     * @param gp the point
-     * @param v the ray
-     * @param n the normal
-     * @return the reflected ray
-     */
-    public static Ray constructReflectedRay(GeoPoint gp, Vector v, Vector n){
-        return new Ray(gp.point, v.subtract(n.scale(2 * alignZero(n.dotProduct(v)))), n);
-    }
-
-
 
 
 }

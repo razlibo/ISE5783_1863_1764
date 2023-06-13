@@ -1,8 +1,13 @@
 package lighting;
 
+import geometries.Intersectable;
 import primitives.Color;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
+
 import static primitives.Util.alignZero;
 
 
@@ -15,6 +20,7 @@ import static primitives.Util.alignZero;
 public class SpotLight extends PointLight{
     Vector direction;
     double narrowBean = 1;
+
 
     /**
      * Sets the narrowness of the beam of light for the spotlight.

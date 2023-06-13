@@ -1,5 +1,6 @@
 package special;
 
+import static java.awt.Color.BLUE;
 import static java.awt.Color.YELLOW;
 
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class TeapotTest {
 
     private final Scene scene = new Scene("Test scene");
 
-    private static final Color color = new Color(200, 0, 0);
+    private static final Color color = new Color(BLUE);
     private static final Material mat = new Material().setKd(0.5).setKs(0.5).setShininess(60);
 
     private static Point[] pnts = new Point[] { null, //

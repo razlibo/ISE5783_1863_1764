@@ -56,7 +56,7 @@ public class Geometries extends Intersectable{
         boolean inf = bbox.isInfinite();
         for (Intersectable geometry : geometries) {
             bodies.add(geometry);
-            if (geometry.bbox.isInfinite) {
+            if (geometry.bbox.isInfinite()) {
                 inf = true;
             }
             maxBbox = Point.createMaxPoint(maxBbox, geometry.bbox.getMax());

@@ -46,24 +46,6 @@ public class DoFTests {
         );
         scene.geometries.add(plane);
 
-//        // Spheres
-//        int numSpheres = 3;
-//        double sphereRadius = 50;
-//        double sphereSpacing = 150;
-//        double spheresCenter = (numSpheres - 1) * sphereSpacing / 2.0;
-//
-//        for (int i = 0; i < numSpheres; i++) {
-//            double x = i * sphereSpacing - spheresCenter;
-//            Sphere sphere = new Sphere(sphereRadius, new Point(0, x, 50));
-//            sphere.setMaterial(new Material()
-//                    .setKd(0.6)
-//                    .setKs(0.4)
-//                    .setShininess(100)
-//                    .setkR(0.3)
-//            );
-//
-//            scene.geometries.add(sphere);
-//        }
         scene.geometries.add(new Sphere(70, new Point(100, 0 ,300)).setMaterial(new Material()
                     .setKd(0.6)
                     .setKs(0.4)
@@ -81,14 +63,6 @@ public class DoFTests {
                 .setKs(0.4)
                 .setShininess(100)
                 .setkR(0.3)));
-
-//        // Add lights to the scene
-//        LightSource spotLight = new SpotLight(
-//                new Color(255, 1000, 1000),
-//                new Point(-100, 100, 100),
-//                new Vector(1, -1, -1))
-//                .setkL(0.0004)
-//                .setkL(0.0001);
 
         LightSource lightSource = new DirectionalLight(new Color(70, 172, 21 ),new Vector(-1,0,0) );
         scene.lights.add(lightSource);

@@ -1,8 +1,12 @@
 package lighting;
 
+import geometries.Intersectable;
 import primitives.Color;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
 
 /**
  * Represents a point light source, which emits light uniformly in all directions from a single point.

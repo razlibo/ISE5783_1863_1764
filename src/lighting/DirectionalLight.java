@@ -1,8 +1,12 @@
 package lighting;
 
+import geometries.Intersectable;
 import primitives.Color;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
 
 
 /**
@@ -16,6 +20,7 @@ public class DirectionalLight extends Light implements LightSource{
      * The direction of the light source
      */
     private Vector direction;
+
 
     /**
      * Sets the direction of the light source.
@@ -52,4 +57,5 @@ public class DirectionalLight extends Light implements LightSource{
     public double getDistance(Point p){
         return Double.POSITIVE_INFINITY;
     }
+
 }

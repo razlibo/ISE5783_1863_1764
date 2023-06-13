@@ -67,7 +67,7 @@ public class LightsTests {
         scene1.geometries.add(sphere);
         scene1.lights.add(new DirectionalLight(sphereLightColor, new Vector(1, 1, -0.5)));
 
-        ImageWriter imageWriter = new ImageWriter("lightSphereDirectional", 500, 500);
+        ImageWriter imageWriter = new ImageWriter("lightSphereDirectional1", 500, 500);
         camera1.setImageWriter(imageWriter) //
                 .setRayTracer(new RayTracerBasic(scene1)) //
                 .renderImage()

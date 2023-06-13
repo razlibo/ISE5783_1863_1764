@@ -60,45 +60,88 @@ public abstract class Intersectable {
         }
     }
 
-    public static class AABB{
+    /**
+     * The AABB class represents an Axis-Aligned Bounding Box.
+     * It is used to enclose objects and determine intersection in computer graphics and collision detection algorithms.
+     */
+    public static class AABB {
         Point min, max, center;
 
-        boolean isInfinite;
+        /**
+         * Flag indicating if the AABB is infinite.
+         */
+        boolean isInfinite = false;
 
+        /**
+         * Constant value used for expanding the AABB slightly.
+         */
         private static final double DELTA = 0.1;
 
-        public boolean isInfinite(){
+        /**
+         * Checks if the AABB is infinite.
+         *
+         * @return true if the AABB is infinite, false otherwise.
+         */
+        public boolean isInfinite() {
             return isInfinite;
         }
 
-        public AABB(Point min, Point max, Point center){
-            min = min.add(new Vector(-DELTA,-DELTA,-DELTA));
-            max = max.add(new Vector(DELTA,DELTA,DELTA));
+        /**
+         * Constructs an AABB with the given minimum point, maximum point, and center point.
+         * Expands the AABB slightly using the DELTA constant.
+         *
+         * @param min    The minimum point of the AABB.
+         * @param max    The maximum point of the AABB.
+         * @param center The center point of the AABB.
+         */
+        public AABB(Point min, Point max, Point center) {
+            min = min.add(new Vector(-DELTA, -DELTA, -DELTA));
+            max = max.add(new Vector(DELTA, DELTA, DELTA));
             this.min = min;
             this.max = max;
             this.center = center;
         }
 
-        public AABB(Point min, Point max){
-            min = min.add(new Vector(-DELTA,-DELTA,-DELTA));
-            max = max.add(new Vector(DELTA,DELTA,DELTA));
+        /**
+         * Constructs an AABB with the given minimum and maximum points.
+         * Calculates the center point and expands the AABB using the DELTA constant.
+         *
+         * @param min The minimum point of the AABB.
+         * @param max The maximum point of the AABB.
+         */
+        public AABB(Point min, Point max) {
+            min = min.add(new Vector(-DELTA, -DELTA, -DELTA));
+            max = max.add(new Vector(DELTA, DELTA, DELTA));
             this.min = min;
             this.max = max;
-            center = new Point((min.getX() + max.getX())/2, (min.getY() + max.getY())/2, (min.getZ() + max.getZ())/2);
-
+            center = new Point(
+                    (min.getX() + max.getX()) / 2,
+                    (min.getY() + max.getY()) / 2,
+                    (min.getZ() + max.getZ()) / 2
+            );
         }
-        public boolean intersect(Ray ray, double maxDis){
+
+        /**
+         * Checks if the AABB intersects with the given Ray within the specified maximum distance.
+         *
+         * @param ray    The Ray to check for intersection.
+         * @param maxDis The maximum distance at which intersection can occur.
+         * @return true if the AABB intersects with the Ray, false otherwise.
+         */
+        public boolean intersect(Ray ray, double maxDis) {
             if (isInfinite) return true;
             var dir = ray.getDir();
             var vP0 = ray.getP0();
-            var invdir = new Vector(1/dir.getX(),1/dir.getY(),1/dir.getZ());
-            int[] sign = {invdir.getX() < 0 ? 1 : 0,invdir.getY() < 0 ? 1 : 0, invdir.getZ() < 0 ? 1 : 0 };
-            Point[] bounds = {min,max};
+            var invdir = new Vector(1 / dir.getX(), 1 / dir.getY(), 1 / dir.getZ());
+            int[] sign = {invdir.getX() < 0 ? 1 : 0, invdir.getY() < 0 ? 1 : 0, invdir.getZ() < 0 ? 1 : 0};
+            Point[] bounds = {min, max};
+            double px = vP0.getX(),py = vP0.getY(),pz = vP0.getZ();
+            double inx = invdir.getX(), iny = invdir.getY(),inz = invdir.getZ();
             double tmin, tmax, tymin, tymax, tzmin, tzmax;
-            tmin = (bounds[sign[0]].getX() - vP0.getX()) * invdir.getX();
-            tmax = (bounds[1-sign[0]].getX() - vP0.getX()) * invdir.getX();
-            tymin = (bounds[sign[1]].getY() - vP0.getY()) * invdir.getY();
-            tymax = (bounds[1-sign[1]].getY() - vP0.getY()) * invdir.getY();
+            tmin = (bounds[sign[0]].getX() - px) * inx;
+            tmax = (bounds[1 - sign[0]].getX() - px) * inx;
+            tymin = (bounds[sign[1]].getY() - py) * iny;
+            tymax = (bounds[1 - sign[1]].getY() - py) * iny;
             if ((tmin > tymax) || (tymin > tmax))
                 return false;
 
@@ -106,8 +149,8 @@ public abstract class Intersectable {
                 tmin = tymin;
             if (tymax < tmax)
                 tmax = tymax;
-            tzmin = (bounds[sign[2]].getZ() - vP0.getZ()) * invdir.getZ();
-            tzmax = (bounds[1-sign[2]].getZ() - vP0.getZ()) * invdir.getZ();
+            tzmin = (bounds[sign[2]].getZ() - pz) * inz;
+            tzmax = (bounds[1 - sign[2]].getZ() - pz) * inz;
 
             if ((tmin > tzmax) || (tzmin > tmax))
                 return false;
@@ -116,32 +159,77 @@ public abstract class Intersectable {
 
             return tmax < maxDis;
         }
-        public double AABBArea(){
+
+        /**
+         * Calculates the surface area of the AABB.
+         *
+         * @return The surface area of the AABB.
+         */
+        public double AABBArea() {
             Point extent = max.subtract(min);
             return extent.getX() * extent.getY() + extent.getY() * extent.getZ() + extent.getZ() * extent.getX();
         }
 
+        /**
+         * Returns the minimum point of the AABB.
+         *
+         * @return The minimum point of the AABB.
+         */
         public Point getMin() {
             return min;
         }
 
+        /**
+         * Returns the maximum point of the AABB.
+         *
+         * @return The maximum point of the AABB.
+         */
         public Point getMax() {
             return max;
         }
 
+        /**
+         * Returns the center point of the AABB.
+         *
+         * @return The center point of the AABB.
+         */
         public Point getCenter() {
             return center;
         }
-        public AABB setInfinity(boolean isInfinite){
+
+        /**
+         * Sets the infinity flag of the AABB.
+         *
+         * @param isInfinite true to set the AABB as infinite, false otherwise.
+         * @return The updated AABB instance.
+         */
+        public AABB setInfinity(boolean isInfinite) {
             this.isInfinite = isInfinite;
             return this;
         }
     }
 
+    /**
+     * The box for AABB improvement
+     */
+
+    AABB bbox;
+
+    /**
+     * find geo intersection
+     * @param ray To find the intersection whit
+     * @return list of points the ray intersect
+     */
     public final List<GeoPoint> findGeoIntersections(Ray ray){
         return findGeoIntersectionsHelper(ray,Double.POSITIVE_INFINITY);
     }
 
+    /**
+     * find geo intersection limited whit max distance
+     * @param ray To find the intersection whit
+     * @param maxDis To limit the intersection points
+     * @return List<GeoPoint> the ray intersect
+     */
     public final List<GeoPoint> findGeoIntersections(Ray ray, double maxDis){
         return findGeoIntersectionsHelper(ray, maxDis);
     }
@@ -170,9 +258,6 @@ public abstract class Intersectable {
         return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
     }
 
-    AABB bbox;
 
-    public AABB getBbox() {
-        return bbox;
-    }
+
 }

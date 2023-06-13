@@ -4,17 +4,20 @@ import primitives.Double3;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
-
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import static primitives.Util.*;
+
 /**
  * class that represent sphere
  *
  * @author Yoni
  */
 public class Sphere extends RadialGeometry {
+
+    /**
+     * The center of the sphere
+     */
     private final Point center;
 
     /**
@@ -70,20 +73,4 @@ public class Sphere extends RadialGeometry {
         return lst.stream().map(p -> new GeoPoint(this, p)).toList();
     }
 
-//    @Override
-//    public boolean isIntersectAABB(AABB bbox) {
-//        var rr = this.radius * this.radius;
-//        var dmin = 0;
-//
-//        if ( this.center.getX() < bbox.min.getD1() )     dmin += Math.sqrt( this.center.getX() - bbox.min.getD1() );
-//        else if( this.center.getX() > bbox.max.getD1() )  dmin += Math.sqrt( this.center.getX() - bbox.max.getD1() );
-//
-//        if ( this.center.getY() < bbox.min.getD2() )     dmin += Math.sqrt( this.center.getY() - bbox.min.getD2() );
-//        else if( this.center.getY() > bbox.max.getD2() )  dmin += Math.sqrt( this.center.getY() - bbox.max.getD2() );
-//
-//        if ( this.center.getZ() < bbox.min.getD3() )     dmin += Math.sqrt( this.center.getZ() - bbox.min.getD3() );
-//        else if( this.center.getZ() > bbox.max.getD3() )  dmin += Math.sqrt( this.center.getZ() - bbox.max.getD3() );
-//
-//        return dmin <= rr;
-//    }
 }

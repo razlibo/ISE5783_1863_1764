@@ -1,8 +1,12 @@
 package lighting;
 
+import geometries.Intersectable;
 import primitives.Color;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
 
 /**
  LightSource is an interface that represents a light source in the scene.
@@ -10,6 +14,7 @@ import primitives.Vector;
  and for getting the direction of the light from a given point in the scene.
  */
 public interface LightSource {
+
     /**
      * Returns the intensity of the light source at a given point in the scene.
      * @param p The point in the scene to calculate the intensity of the light source.
@@ -30,6 +35,7 @@ public interface LightSource {
      * @return the distance
      */
     public double getDistance(Point p);
+
 
 
 }
